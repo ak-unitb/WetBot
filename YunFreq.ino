@@ -198,11 +198,11 @@ int getGradeOfDrynessByFrequency(float freq) {
 void initAndSyncClock() {
   
   // thie makes this function clallable just once at the very beginning
-  setSyncProvider( requestSync );  //set function to call when sync required
+  setSyncProvider( requestTimeSyncFromYunSide );  //set function to call when sync required
   setSyncInterval( (uint32_t)(24 * 60 * 59) ); // choosed 84960 secs; a day has 86400  // argument is maximal: 4.294.967.295
 }
 
-time_t requestSync() {
+time_t requestTimeSyncFromYunSide() {
   unsigned long pctime;
   char pctimeCharBuf[11] = "";
   Process p;
@@ -228,8 +228,8 @@ time_t requestSync() {
 
   char *junk;
   pctime = strtol(pctimeCharBuf, &junk, 10);
-  if (strlen(junk) > 0) {
-    pctime = DEFAULT_TIME;
+  if (strlen(junk) > 0) { // systemcall response from yun side contains unexpected characters
+    pctime = DEFAULT_TIME; // fall back to defined const fallback @see above
   }
   Serial.print("requestSync => read pctime is: ");
   Serial.println(pctime);
