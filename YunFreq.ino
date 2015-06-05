@@ -115,6 +115,7 @@ void loop() {
 } // end void loop
 
 
+
 // so to say, private methods ;)
 void initLeds() {
   Serial.print("LED-Tests: ");
@@ -122,9 +123,6 @@ void initLeds() {
   setupLeds();
   delay(300);
   testLedsInOrder(300);
-  delay(300);
-  blinkAllLeds();
-  blinkAllLeds();
   Serial.println(" Done!\n");
 }
 
@@ -151,17 +149,6 @@ void testLedsInOrder(int interruptionTime) {
     }
     delay(interruptionTime);
   }
-}
-
-void blinkAllLeds() {
-  for (i = 0; i <= (sizeof(LEDs)/sizeof(int)); i++) {
-    digitalWrite( LEDs[i], HIGH );
-  }
-  delay(500);
-  for (i = 0; i <= (sizeof(LEDs)/sizeof(int)); i++) {
-    digitalWrite( LEDs[i], LOW );
-  }
-  delay(500);
 }
 
 /**
@@ -231,13 +218,13 @@ time_t requestTimeSyncFromYunSide() {
   if (strlen(junk) > 0) { // systemcall response from yun side contains unexpected characters
     pctime = DEFAULT_TIME; // fall back to defined const fallback @see above
   }
-  Serial.print("requestSync => read pctime is: ");
+  Serial.print("requestTimeSyncFromYunSidecd => read pctime is: ");
   Serial.println(pctime);
 
   return pctime;
 }
 
-void digitalClockDisplay(){
+void digitalClockDisplay() {
   // digital clock display of the time
   printDigits(day(), false);
   Serial.print(".");
