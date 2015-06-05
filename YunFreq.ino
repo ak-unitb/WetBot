@@ -35,14 +35,26 @@ const int LEDblau = 8; // nass / frisch gegossen
 //const int LEDs[4] = { LEDgruen, LEDgelb, LEDorange, LEDrot1 };
 const int LEDs[4] = { LEDblau, LEDgruen, LEDgelb, LEDrot };
 
+int previouslyHighlightedLedNumber = -1;
+int currentlyHighlightedLedNumber = -1;
+
+
+const int SENSOR_1  = 14;
+const int SENSOR_2  = 15;
+const int SENSOR_3  = 16;
+const int SENSOR_4  = 17;
+const int SENSOR_5  = 18;
+const int SENSOR_6  = 19;
+const int[2] = { SENSOR_1, SENSOR_2 };
+
+
+
 const long waitIntervallForRead = 60000;
 
 unsigned long currentFrequency;
 
 int i = 0; // global iteration counter variable (take care, it's global ;) )
 
-int previouslyHighlightedLedNumber = -1;
-int currentlyHighlightedLedNumber = -1;
 
 
 void setup() {
