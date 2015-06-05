@@ -92,6 +92,7 @@ void loop() {
   }
   if (currentFrequency == 0) {
     Serial.println("Error: Kein Signal.");
+    digitalWrite(LEDs[previouslyHighlightedLedNumber], LOW);
   } else {
 
     currentlyHighlightedLedNumber = getGradeOfDrynessByFrequency(currentFrequency);
@@ -232,7 +233,7 @@ void digitalClockDisplay() {
   Serial.print(".");
   Serial.print(year()); 
   Serial.print(" ");
-  Serial.print(hour());
+  printDigits((hour(), false);
   printDigits(minute(), true);
   printDigits(second(), true);
   Serial.print(" UTC");
