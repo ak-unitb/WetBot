@@ -25,17 +25,16 @@ Vielen Dank an die Arduino-Community und alle OpenSourc@s in the World!
 #define TIME_REQUEST  7    // ASCII bell character requests a time sync message 
 const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013
 
-//const int LEDrot2 = 4; // staubig
-const int LEDrot = 5; // trocken
-const int LEDgelb = 6; // feucht
-const int LEDgruen = 7; // nass
-const int LEDblau = 8; // nass / frisch gegossen
+                               // || Zustand            || count0 || Tacuma ||
+const int LEDdusty = 4;        // |  staubig         => |  rot    |  rot2   |
+const int LEDdry = 5;          // |  trocken         => |  gelb   |  rot1   |
+const int LEDhumid = 6;        // |  feucht          => |  gruen  |  gelb   |
+const int LEDwet = 7;          // |  nass            => |  blau   |  gruen  |
+const int LEDjustWatered = 8;  // |  frisch gegossen => |  weiss  |  blau   |
 
-//const int LEDs[5] = { LEDgruen, LEDgelb, LEDorange, LEDrot1, LEDrot2 };
-//const int LEDs[4] = { LEDgruen, LEDgelb, LEDorange, LEDrot1 };
-const int LEDs[4] = { LEDblau, LEDgruen, LEDgelb, LEDrot };
+const int LEDs[5]= { LEDjustWatered, LEDwet, LEDhumid, LEDdry, LEDdusty };
 
-const long waitIntervallForRead = 60000;
+const long waitIntervallForRead = 30000;
 
 unsigned long currentFrequency;
 
@@ -233,7 +232,7 @@ void digitalClockDisplay() {
   Serial.print(".");
   Serial.print(year()); 
   Serial.print(" ");
-  printDigits((hour(), false);
+  printDigits(hour(), false);
   printDigits(minute(), true);
   printDigits(second(), true);
   Serial.print(" UTC");
