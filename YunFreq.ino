@@ -41,12 +41,12 @@ int previouslyHighlightedLedNumber = -1;
 int currentlyHighlightedLedNumber = -1;
 
 
-const int SENSOR_1  = 14;
-const int SENSOR_2  = 15;
-const int SENSOR_3  = 16;
-const int SENSOR_4  = 17;
-const int SENSOR_5  = 18;
-const int SENSOR_6  = 19;
+const int SENSOR_1  = A0;
+const int SENSOR_2  = A1;
+const int SENSOR_3  = A2;
+const int SENSOR_4  = A3;
+const int SENSOR_5  = A4;
+const int SENSOR_6  = A5;
 // const int SENSORs[6] = { SENSOR_1, SENSOR_2, SENSOR_3, SENSOR_4, SENSOR_5, SENSOR_6, SENSOR_6 };
 const int SENSORs[2] = { SENSOR_1, SENSOR_2 };
 
