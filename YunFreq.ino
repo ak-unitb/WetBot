@@ -170,7 +170,7 @@ void testLedsInOrder(int interruptionTime) {
 int getGradeOfDrynessByFrequency(float freq) {
   //Serial.print("getGradeOfDrynessByFrequency: with freq: ");
   //Serial.print(freq);
-  int gradeOfDryness = round( ( 0.000022 * freq ) + 0.163636 );
+  int gradeOfDryness = round( ( 0.000039 * freq ) + 0.206379 );
   //Serial.print(" and rounded result: ");
   //Serial.print(gradeOfDryness);
   if (gradeOfDryness >= (sizeof(LEDs)/sizeof(int))) {
