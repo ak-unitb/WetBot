@@ -1,18 +1,21 @@
 /*
-YunFreq 0.2a by Tacuma, count0
-02. Juni 2015
+YunFreq 0.3a by Tacuma, count0
+06. Juni 2015
 basiert auf:
  
-* FreqCount - Example with serial output
+ * FreqCount - Example with serial output
  * http://www.pjrc.com/teensy/td_libs_FreqCount.html
  *
  * This example code is in the public domain.
 
- Sensor Input auf Pin 12 / Arduino YUN
+ Sensors Input auf Pin 12 / Arduino Yùn
+ Sensors VCC   auf Pin 14 - 19 / Arduino Yún
+ 
  Fuer die Lauffaehigkeit ist in der FreqCount.cpp oder so
  eine zeile 556 oder so auskommentiert. (irgendwas mit Timer2 oder so)
  31.05.2015 / modified by tq
- 
+
+
 Vielen Dank an die Arduino-Community und alle OpenSourc@s in the World!
 
  */
@@ -45,9 +48,10 @@ const int SENSOR_3  = 16;
 const int SENSOR_4  = 17;
 const int SENSOR_5  = 18;
 const int SENSOR_6  = 19;
-const int[2] = { SENSOR_1, SENSOR_2 };
+const int SENSORs[2] = { SENSOR_1, SENSOR_2 };
 
-
+int previousSensorNumber = -1;
+int currentSensorNumber = -1;
 
 const long waitIntervallForRead = 60000;
 
@@ -71,9 +75,9 @@ void setup() {
   Serial.println("Serial is available.");
   digitalWrite(13, LOW); // Serial now is available, switching of the led
 
-  Serial.println("***  YunFreq 0.1  ***");
-  Serial.println("***  by tq 6/2015 *** ");
-  Serial.println("***  6.504 Bytes  *** ");
+  Serial.println("***  YunFreq 0.3a  ***");
+  Serial.println("***  by tq, count0 6/2015 *** ");
+  Serial.println("***  18.326 Bytes  *** ");
   Serial.println("");
 
   delay(200);
@@ -81,13 +85,14 @@ void setup() {
   Serial.println("will initialize the time");
   initAndSyncClock();
 
-  delay(200);
-
   Serial.println("will initialize the LEDs");
   initLeds();
 
-  FreqCount.begin(1000);
+  Serial.println("will initialize the SENSORs");
+  initSensors();
+
   Serial.println("Messung beginnt.");
+  FreqCount.begin(1000);
   delay(1000);
   
 }
@@ -95,25 +100,40 @@ void setup() {
 
 void loop() {
 
-  if (FreqCount.available()) {
+   if (FreqCount.available()) {
     currentFrequency = FreqCount.read();
     Serial.print("Frequenz: ");
     Serial.print(currentFrequency);
     Serial.print(" Hz um ");
     digitalClockDisplay();
   }
+
+  // After reading the Frequency after the delay of this loop function we switch to the next SENSOR
+  currentSensorNumber = getNextSensorNumber();
+  if (previousSensorNumber > -1) {
+    digitalWrite(SENSORs[previousSensorNumber], LOW);
+  }
+  digitalWrite(SENSORs[currentSensorNumber], HIGH);
+  previousSensorNumber = currentSensorNumber;
+
   if (currentFrequency == 0) {
+
     Serial.println("Error: Kein Signal.");
+    digitalWrite(LEDs[previouslyHighlightedLedNumber], LOW);
+
   } else {
 
     currentlyHighlightedLedNumber = getGradeOfDrynessByFrequency(currentFrequency);
-    if (currentlyHighlightedLedNumber != previouslyHighlightedLedNumber) {
-      if (previouslyHighlightedLedNumber > -1) {
 
+    if (currentlyHighlightedLedNumber != previouslyHighlightedLedNumber) {
+
+      if (previouslyHighlightedLedNumber > -1) {
         digitalWrite(LEDs[previouslyHighlightedLedNumber], LOW);
       }
 
-      Serial.print("####--- ! Dryness changed to ");
+      Serial.print("####--- ! Dryness changed for Sensor: ");
+      Serial.print((1 + previousSensorNumber));
+      Serial.print(" to: ");
       Serial.println(currentlyHighlightedLedNumber);
       digitalWrite(LEDs[currentlyHighlightedLedNumber], HIGH);
       
@@ -139,7 +159,7 @@ void initLeds() {
 }
 
 void setupLeds() {
-    for (i = 0; i < (sizeof(LEDs)/sizeof(int)); i++) {
+  for (i = 0; i < (sizeof(LEDs)/sizeof(int)); i++) {
 
     pinMode( LEDs[i], OUTPUT );
     
@@ -194,6 +214,28 @@ int getGradeOfDrynessByFrequency(float freq) {
   return gradeOfDryness;
 }
 
+void initSensors() {
+
+  for (i = 0; i < (sizeof(SENSORs)/sizeof(int)); i++) {
+    pinMode( SENSORs[i], OUTPUT );
+  }
+
+  // switching to the first sensor:
+  previousSensorNumber = 0;
+  digitalWrite(SENSORs[previousSensorNumber], HIGH);
+}
+
+int getNextSensorNumber() {
+  // int previousSensorNumber = -1;
+  // int currentSensorNumber = -1;
+
+  if (previousSensorNumber >= (sizeof(SENSORs)/sizeof(int)) - 1) {
+    return 0;
+  }
+  return 1 + previousSensorNumber;
+}
+
+
 void initAndSyncClock() {
   
   // thie makes this function clallable just once at the very beginning
@@ -230,7 +272,7 @@ time_t requestTimeSyncFromYunSide() {
   if (strlen(junk) > 0) { // systemcall response from yun side contains unexpected characters
     pctime = DEFAULT_TIME; // fall back to defined const fallback @see above
   }
-  Serial.print("requestTimeSyncFromYunSidecd => read pctime is: ");
+  Serial.print("requestTimeSyncFromYunSide => read pctime is: ");
   Serial.println(pctime);
 
   return pctime;
@@ -244,7 +286,7 @@ void digitalClockDisplay() {
   Serial.print(".");
   Serial.print(year()); 
   Serial.print(" ");
-  Serial.print(hour());
+  printDigits(hour(), false);
   printDigits(minute(), true);
   printDigits(second(), true);
   Serial.print(" UTC");
