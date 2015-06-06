@@ -8,7 +8,7 @@ basiert auf:
  *
  * This example code is in the public domain.
 
- Sensors Input auf Pin 12 / Arduino Yùn
+ Sensors Input auf Pin 12 / Arduino Yún
  Sensors VCC   auf Pin 14 - 19 / Arduino Yún
  
  Fuer die Lauffaehigkeit ist in der FreqCount.cpp oder so
@@ -95,21 +95,18 @@ void setup() {
   FreqCount.begin(1000);
   delay(1000);
   
-}
+} // end void setup
 
 
 void loop() {
 
-  Serial.print("before retrieving the frequency, currently active Sensor number: ");
-  Serial.print((1 + previousSensorNumber));
-  Serial.print(" pinNumber: ");
-  Serial.println(SENSORs[previousSensorNumber]);
-  
   if (FreqCount.available()) {
     currentFrequency = FreqCount.read();
-    Serial.print("Frequenz: ");
+    Serial.print("Sensor: ");
+    Serial.print((1 + previousSensorNumber));
+    Serial.print(" -> frequency: ");
     Serial.print(currentFrequency);
-    Serial.print(" Hz um ");
+    Serial.print(" Hz @ ");
     digitalClockDisplay();
   }
 
@@ -119,11 +116,10 @@ void loop() {
     digitalWrite(SENSORs[previousSensorNumber], LOW);
   }
   digitalWrite(SENSORs[currentSensorNumber], HIGH);
-  previousSensorNumber = currentSensorNumber;
 
   if (currentFrequency == 0) {
 
-    Serial.println("Error: Kein Signal.");
+    Serial.println("Error: no signal.");
     digitalWrite(LEDs[previouslyHighlightedLedNumber], LOW);
 
   } else {
@@ -142,12 +138,14 @@ void loop() {
       Serial.println(currentlyHighlightedLedNumber);
       digitalWrite(LEDs[currentlyHighlightedLedNumber], HIGH);
       
-      // saving current led for next iteration
+      // saving current led number for next iteration
       previouslyHighlightedLedNumber = currentlyHighlightedLedNumber;
-    }/* else {
-      Serial.print("."); // debugging ... 
-    }*/
+    }
   }
+
+  // saving current sensor number for next iteration
+  previousSensorNumber = currentSensorNumber;
+
   delay(waitIntervallForRead);
 } // end void loop
 
@@ -211,7 +209,7 @@ int getGradeOfDrynessByFrequency(float freq) {
   //Serial.print(" and rounded result: ");
   //Serial.print(gradeOfDryness);
   if (gradeOfDryness >= (sizeof(LEDs)/sizeof(int))) {
-    Serial.println(" WARN: formula calculated incompatible result !!!!");
+    //Serial.println(" WARN: formula calculated incompatible result !!!!");
     gradeOfDryness = (sizeof(LEDs)/sizeof(int)) - 1;
   }
   //Serial.println("");
