@@ -24,9 +24,19 @@ Vielen Dank an die Arduino-Community und alle OpenSourc@s in the World!
 #include <Time.h>
 #include <Wire.h>
 
-#define TIME_HEADER  'T'   // Header tag for serial time sync message
-#define TIME_REQUEST  7    // ASCII bell character requests a time sync message 
 const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013
+
+const int SENSOR_1  = A0;
+const int SENSOR_2  = A1;
+const int SENSOR_3  = A2;
+const int SENSOR_4  = A3;
+const int SENSOR_5  = A4;
+const int SENSOR_6  = A5;
+// const int SENSORs[6] = { SENSOR_1, SENSOR_2, SENSOR_3, SENSOR_4, SENSOR_5, SENSOR_6 };
+const int SENSORs[2] = { SENSOR_1, SENSOR_2 };
+
+int previousSensorNumber = -1;
+int currentSensorNumber = -1;
 
                                // || Zustand            || count0 || Tacuma ||
 const int LEDdusty = 4;        // |  staubig         => |  rot    |  rot2   |
@@ -37,21 +47,10 @@ const int LEDjustWatered = 8;  // |  frisch gegossen => |  weiss  |  blau   |
 
 const int LEDs[5]= { LEDjustWatered, LEDwet, LEDhumid, LEDdry, LEDdusty };
 
-int previouslyHighlightedLedNumber = -1;
-int currentlyHighlightedLedNumber = -1;
+int previouslyHighlightedLedNumberOfSensor[(sizeof(SENSORs)/sizeof(int))] ={};
+int currentlyHighlightedLedNumberOfSensor[(sizeof(SENSORs)/sizeof(int))] = {};
 
 
-const int SENSOR_1  = A0;
-const int SENSOR_2  = A1;
-const int SENSOR_3  = A2;
-const int SENSOR_4  = A3;
-const int SENSOR_5  = A4;
-const int SENSOR_6  = A5;
-// const int SENSORs[6] = { SENSOR_1, SENSOR_2, SENSOR_3, SENSOR_4, SENSOR_5, SENSOR_6, SENSOR_6 };
-const int SENSORs[2] = { SENSOR_1, SENSOR_2 };
-
-int previousSensorNumber = -1;
-int currentSensorNumber = -1;
 
 const long waitIntervallForRead = 30000; // half a minute
 
@@ -103,14 +102,14 @@ void loop() {
   if (FreqCount.available()) {
     currentFrequency = FreqCount.read();
     Serial.print("Sensor: ");
-    Serial.print((1 + previousSensorNumber));
+    Serial.print((previousSensorNumber));
     Serial.print(" -> frequency: ");
     Serial.print(currentFrequency);
     Serial.print(" Hz @ ");
     digitalClockDisplay();
   }
 
-  // After reading the Frequency after the delay of this loop function we switch to the next SENSOR
+  // After reading the Frequency after the delay of this loop we switch to the next SENSOR
   currentSensorNumber = getNextSensorNumber();
   if (previousSensorNumber > -1) {
     digitalWrite(SENSORs[previousSensorNumber], LOW);
@@ -120,26 +119,27 @@ void loop() {
   if (currentFrequency == 0) {
 
     Serial.println("Error: no signal.");
-    digitalWrite(LEDs[previouslyHighlightedLedNumber], LOW);
+    digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[previousSensorNumber]], LOW);
 
   } else {
 
-    currentlyHighlightedLedNumber = getGradeOfDrynessByFrequency(currentFrequency);
+    // keeping the current grade of dryness for sensor
+    currentlyHighlightedLedNumberOfSensor[previousSensorNumber] = getGradeOfDrynessByFrequency(currentFrequency);
 
-    if (currentlyHighlightedLedNumber != previouslyHighlightedLedNumber) {
+    if (currentlyHighlightedLedNumberOfSensor[previousSensorNumber] != previouslyHighlightedLedNumberOfSensor[previousSensorNumber]) {
 
-      if (previouslyHighlightedLedNumber > -1) {
-        digitalWrite(LEDs[previouslyHighlightedLedNumber], LOW);
+      if (previouslyHighlightedLedNumberOfSensor[previousSensorNumber] > -1) {
+        digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[previousSensorNumber]], LOW);
       }
 
       Serial.print("####--- ! Dryness changed for Sensor: ");
       Serial.print((1 + previousSensorNumber));
       Serial.print(" to: ");
-      Serial.println(currentlyHighlightedLedNumber);
-      digitalWrite(LEDs[currentlyHighlightedLedNumber], HIGH);
+      Serial.println(currentlyHighlightedLedNumberOfSensor[previousSensorNumber]);
+      digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
       
-      // saving current led number for next iteration
-      previouslyHighlightedLedNumber = currentlyHighlightedLedNumber;
+      // saving current led number of sensor for next iterations
+      previouslyHighlightedLedNumberOfSensor[previousSensorNumber] = currentlyHighlightedLedNumberOfSensor[previousSensorNumber];
     }
   }
 
@@ -153,6 +153,13 @@ void loop() {
 
 // so to say, private methods ;)
 void initLeds() {
+
+  // init LEDs status for sensor reflecting variables
+  for (i = 0; i < (sizeof(SENSORs)/sizeof(int)); i++) {
+    previouslyHighlightedLedNumberOfSensor[i] = -1;
+    currentlyHighlightedLedNumberOfSensor[i] = -1;
+  }
+
   Serial.print("LED-Tests: ");
   delay(800);
   setupLeds();
@@ -224,13 +231,16 @@ void initSensors() {
   }
 
   // switching to the first sensor:
+  Serial.print("switching to the first sensor: ");
+  Serial.print(previousSensorNumber);
+  Serial.print(" (");
+  Serial.print(SENSORs[previousSensorNumber]);
+  Serial.println(")");
   previousSensorNumber = 0;
   digitalWrite(SENSORs[previousSensorNumber], HIGH);
 }
 
 int getNextSensorNumber() {
-  // int previousSensorNumber = -1;
-  // int currentSensorNumber = -1;
 
   if (previousSensorNumber >= (sizeof(SENSORs)/sizeof(int)) - 1) {
     return 0;

@@ -10,6 +10,13 @@
 ##
 ## @TODO: check for existing sd-card "if [[-d /mnt/sda1]]"
 ## @TODO: check for correct overlay on /mnt/sda1 ... (and study before ;) )
+## @TODO: (URGENT!) delete default mysql root user without password, or change them to the same password!
+##             - mysql> SET PASSWORD FOR 'root'@'Arduino' = PASSWORD('<THE_CHOOSEN_PASSWORD>');
+##             - mysql> SET PASSWORD FOR 'root'@'127.0.0.1' = PASSWORD('<THE_CHOOSEN_PASSWORD>');
+## @TODO: _just_ for development purposes create a mysql user 'root'@'%' for easier acces to DB, but print
+##        a warning and provide an option to skip (default is skipping!)
+##             - CREATE USER 'root'@'%' IDENTIFIED BY '<THE_CHOOSEN_PASSWORD>';
+##	           - GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
 ## @TODO: Write example index.php to /mnt/sda1/arduino/www
 ## @TODO: ask for required Timezone and modify /etc/php.ini appropriate
 ##
