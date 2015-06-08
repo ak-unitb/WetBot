@@ -54,8 +54,9 @@ char currentComment[7] = "";
 
 
 
-const long waitIntervallForRead = 60 / sizeof(SENSORs) * 60 * 1000; // in millisecs // one hour per each sensor is best!! (cuase: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
-//const long waitIntervallForRead = 60 / 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one minute per each sensor ... for debugging
+//const long waitIntervallForRead = 86400000; // in millisecs // 24 * 60 * 60 * 1000 => one day
+//const long waitIntervallForRead = 3600000; // in millisecs // one hour per each sensor is best!! (cause: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
+const long waitIntervallForRead = 120000; // in millisecs // 2 * 60 * 1000 => two minutes per each sensor ... for debugging
 
 unsigned long currentFrequency;
 
@@ -107,7 +108,7 @@ void loop() {
   if (FreqCount.available()) {
     currentFrequency = FreqCount.read();
     Serial.print("Sensor: ");
-    Serial.print((1 + previousSensorNumber));
+    Serial.print(previousSensorNumber);
     Serial.print(" -> frequency: ");
     Serial.print(currentFrequency);
     Serial.print(" Hz @ ");
@@ -223,12 +224,21 @@ void testLedsInOrder(int interruptionTime) {
  *  50000   1
  *  100000  2
  *  200000  3 
- *     => f(x) = -0 * x^2 + 0,000022 * x + 0,206379 
+ *     => f(x) = -0 * x^2 + 0,000022 * x + 0,206379
+ * Next trial: Formula isn't satisfying  - id need's to be somthign with ln(x); frequency first is divided by 1000 to get a simpler graph
+ *  0       0  f(0) = 0 to f(1708) = 0
+ *  16      1  f(1709) = 1 to f(18137) = 1
+ *  32      2  f(18138) = 2 to f(74726) = 2
+ *  96      3  f(74727) = 3 to f(132976) = 3
+ *  160     4  f(132977) = 4
+ *     => f(x) = 0.501611 * log(x) + 0.000059 * x^2
  */
 int getGradeOfDrynessByFrequency(float freq) {
   //Serial.print("getGradeOfDrynessByFrequency: with freq: ");
   //Serial.print(freq);
-  int gradeOfDryness = round( ( 0.000022 * freq ) + 0.163636 );
+  //int gradeOfDryness = round( ( 0.000022 * freq ) + 0.163636 );
+  float x = freq / 1000;
+  int gradeOfDryness = round( ( ( 0.501611 * log( x + 1) ) + ( 0.000059 * pow(x, 2) ) ) );
   //Serial.print(" and rounded result: ");
   //Serial.print(gradeOfDryness);
   if (gradeOfDryness >= (sizeof(LEDs)/sizeof(int))) {
