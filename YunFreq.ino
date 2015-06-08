@@ -54,7 +54,7 @@ char currentComment[7] = "";
 
 
 
-const long waitIntervallForRead = 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one hour per each sensor is best!! (cuase: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
+const long waitIntervallForRead = 60 / sizeof(SENSORs) * 60 * 1000; // in millisecs // one hour per each sensor is best!! (cuase: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
 //const long waitIntervallForRead = 60 / 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one minute per each sensor ... for debugging
 
 unsigned long currentFrequency;
@@ -156,8 +156,8 @@ void loop() {
   }
 
   // saving the data in DB
-  //executeMysqlInsert(currentFrequency, currentlyHighlightedLedNumberOfSensor[previousSensorNumber], currentComment, (1 + previousSensorNumber));
-  free(currentComment);
+  executeMysqlInsert(currentFrequency, currentlyHighlightedLedNumberOfSensor[previousSensorNumber], currentComment, (1 + previousSensorNumber));
+  strcpy(currentComment, "");
 
   // saving current sensor number for next iteration
   previousSensorNumber = currentSensorNumber;
@@ -272,15 +272,21 @@ void executeMysqlInsert(long frequency, int gradeOfDryness, char* comment, int s
   char insertStatement[160];
   int resultStringLength = sprintf(insertStatement, insertTpl, frequency, gradeOfDryness, comment, sensorNumber); // 6+1+6+2
   if (resultStringLength > 160 || resultStringLength < 0) {
-    Serial.println("ERROR: Buffer-Overflow!");
+    Serial.println("ERROR: function executeMysqlInsert: Buffer-Overflow while concatinating mysql-statement!");
   } else {
-    Serial.println(insertStatement);
+    //Serial.println(insertStatement);
+    Process p;
+    p.runShellCommand(insertStatement);
+    // do nothing until the process finishes, so you get the whole output:
+    while(p.running()) {
+      digitalWrite(13, HIGH); // wait for Serial to connect.
+    };
+    digitalWrite(13, LOW);
+    // mysql -e doesn't has any output, so we needn't to read anything... but anyway:
+    while (p.available()) {
+      int result = p.parseInt();   // look for an integer
+    }
   }
-  Process p;
-  p.runShellCommand(insertStatement);
-  // do nothing until the process finishes, so you get the whole output:
-  while(p.running());
-  // mysql -e doesn't has any out put, so we needn't to read anything... unfortunately!
 }
 
 
