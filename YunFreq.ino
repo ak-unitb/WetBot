@@ -1,5 +1,5 @@
 /*
-YunFreq 0.3a by Tacuma, count0
+YunFreq 0.3a by count0 (Mr. Software) and Tacuma (Mr. Hardware9
 06. Juni 2015
 basiert auf:
  
@@ -50,9 +50,12 @@ const int LEDs[5]= { LEDjustWatered, LEDwet, LEDhumid, LEDdry, LEDdusty };
 int previouslyHighlightedLedNumberOfSensor[(sizeof(SENSORs)/sizeof(int))] ={};
 int currentlyHighlightedLedNumberOfSensor[(sizeof(SENSORs)/sizeof(int))] = {};
 
+char currentComment[7] = "";
 
 
-const long waitIntervallForRead = 30000; // half a minute
+
+//const long waitIntervallForRead = 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one hour per each sensor is best!! (cuase: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
+const long waitIntervallForRead = 60 / 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one minute per each sensor ... for debugging
 
 unsigned long currentFrequency;
 
@@ -102,7 +105,7 @@ void loop() {
   if (FreqCount.available()) {
     currentFrequency = FreqCount.read();
     Serial.print("Sensor: ");
-    Serial.print((previousSensorNumber));
+    Serial.print((1 + previousSensorNumber));
     Serial.print(" -> frequency: ");
     Serial.print(currentFrequency);
     Serial.print(" Hz @ ");
@@ -120,6 +123,7 @@ void loop() {
 
     Serial.println("Error: no signal.");
     digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[previousSensorNumber]], LOW);
+    strcpy(currentComment, "error");
 
   } else {
 
@@ -138,10 +142,16 @@ void loop() {
       Serial.println(currentlyHighlightedLedNumberOfSensor[previousSensorNumber]);
       digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
       
+      strcpy(currentComment, "change");
+
       // saving current led number of sensor for next iterations
       previouslyHighlightedLedNumberOfSensor[previousSensorNumber] = currentlyHighlightedLedNumberOfSensor[previousSensorNumber];
     }
   }
+
+  // saving the data in DB
+  executeMysqlInsert(currentFrequency, currentlyHighlightedLedNumberOfSensor[previousSensorNumber], currentComment, (1 + previousSensorNumber));
+  free(currentComment);
 
   // saving current sensor number for next iteration
   previousSensorNumber = currentSensorNumber;
@@ -232,7 +242,7 @@ void initSensors() {
 
   // switching to the first sensor:
   Serial.print("switching to the first sensor: ");
-  Serial.print(previousSensorNumber);
+  Serial.print((1 + previousSensorNumber));
   Serial.print(" (");
   Serial.print(SENSORs[previousSensorNumber]);
   Serial.println(")");
@@ -246,6 +256,25 @@ int getNextSensorNumber() {
     return 0;
   }
   return 1 + previousSensorNumber;
+}
+
+
+// execute a mysql-query via systemCall (provided by Bridge)
+void executeMysqlInsert(long frequency, int gradeOfDryness, char* comment, int sensorNumber) {
+  // INSERT INTO `moisture`.`sensor_datas` (`frequency`, `grade_of_dryness`, `comment`, `sensor_id`) VALUES (<long frequency>, <int gradeOdDryness>, <string comment [error|change]>, <int sensorNumber>);
+  char insertTpl[155] = "mysql -uroot -parduino -e'INSERT INTO `moisture`.`sensor_datas` (`frequency`, `grade_of_dryness`, `comment`, `sensor_id`) VALUES (%lu, %d, \"%s\", %d);'"; // 9 chars to replace
+  char insertStatement[160];
+  int resultStringLength = sprintf(insertStatement, insertTpl, frequency, gradeOfDryness, comment, sensorNumber); // 6+1+6+2
+  if (resultStringLength > 160 || resultStringLength < 0) {
+    Serial.println("ERROR: Buffer-Overflow!");
+  } else {
+    Serial.println(insertStatement);
+  }
+  Process p;
+  p.runShellCommand(insertStatement);
+  // do nothing until the process finishes, so you get the whole output:
+  while(p.running());
+  // mysql -e doesn't has any out put, so we needn't to read anything... unfortunately!
 }
 
 
