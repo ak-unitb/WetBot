@@ -1,5 +1,4 @@
 #!/bin/ash
-
 ####
 ##
 ## !!-> assuming there is a sd-card!
