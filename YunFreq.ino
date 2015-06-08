@@ -54,8 +54,8 @@ char currentComment[7] = "";
 
 
 
-//const long waitIntervallForRead = 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one hour per each sensor is best!! (cuase: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
-const long waitIntervallForRead = 60 / 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one minute per each sensor ... for debugging
+const long waitIntervallForRead = 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one hour per each sensor is best!! (cuase: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
+//const long waitIntervallForRead = 60 / 60 / (sizeof(SENSORs)/sizeof(int)) * 60 * 1000; // in millisecs // one minute per each sensor ... for debugging
 
 unsigned long currentFrequency;
 
@@ -95,6 +95,8 @@ void setup() {
 
   Serial.println("Messung beginnt.");
   FreqCount.begin(1000);
+  Serial.print("waitIntervallForRead: ");
+  Serial.println(waitIntervallForRead);
   delay(1000);
   
 } // end void setup
@@ -123,7 +125,11 @@ void loop() {
 
     Serial.println("Error: no signal.");
     digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[previousSensorNumber]], LOW);
+    currentlyHighlightedLedNumberOfSensor[previousSensorNumber] = 4; // TODO: get max graade of dryness ...
+    digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
     strcpy(currentComment, "error");
+    // saving current led number of sensor for next iterations
+    previouslyHighlightedLedNumberOfSensor[previousSensorNumber] = currentlyHighlightedLedNumberOfSensor[previousSensorNumber];
 
   } else {
 
@@ -150,7 +156,7 @@ void loop() {
   }
 
   // saving the data in DB
-  executeMysqlInsert(currentFrequency, currentlyHighlightedLedNumberOfSensor[previousSensorNumber], currentComment, (1 + previousSensorNumber));
+  //executeMysqlInsert(currentFrequency, currentlyHighlightedLedNumberOfSensor[previousSensorNumber], currentComment, (1 + previousSensorNumber));
   free(currentComment);
 
   // saving current sensor number for next iteration
