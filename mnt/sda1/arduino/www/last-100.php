@@ -23,7 +23,9 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#" onclick="alert('not implemented yet');return false;">Sensors</a></li>
+            <li><a href="#" onclick="alert('not implemented yet');">Sensors</a></li>
+            <li><a href="./last-100.php">letzte hundert Einträge</a></li>
+            <li><a href="/cgi-bin/luci/webpanel/homepage">Yun-Admin</a></li>
           </ul>
         </div>
       </div>
