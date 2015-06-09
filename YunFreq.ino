@@ -144,7 +144,7 @@ void loop() {
       }
 
       Serial.print("####--- ! Dryness changed for Sensor: ");
-      Serial.print((1 + previousSensorNumber));
+      Serial.print(previousSensorNumber);
       Serial.print(" to: ");
       Serial.println(currentlyHighlightedLedNumberOfSensor[previousSensorNumber]);
       digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
