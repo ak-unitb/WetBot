@@ -45,22 +45,7 @@
         if ($rsSensors === false) {
             trigger_error('Wrong SQL: ' . $sqlSensors . ' Error: ' . $conn->error, E_USER_ERROR);
         } else {
-?>
-          <table border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Pin Number</th>
-                    <th>Name</th>
-                    <th>Location Description</th>
-                    <th>last Frequency</th>
-                    <th>last Grade of Dryness</th>
-                    <th>last Comment</th>
-                    <th>Created @</th>
-                </tr>
-            </thead>
-            <tbody>
-<?php
+
             $rsSensors->data_seek(0);
             while ($rowSensors = $rsSensors->fetch_assoc()) {
                 $sqlSensorDatas = "SELECT * FROM `sensor_datas` WHERE `sensor_id` = ".$rowSensors['id']." ORDER BY `created_at` DESC LIMIT 1";
@@ -71,24 +56,29 @@
                     $rsSensorDatas->data_seek(0);
                     $rowSensorDatas = $rsSensorDatas->fetch_assoc();
 ?>
-                <tr>
-                    <td><?php echo $rowSensors['id'] ?></td>
-                    <td><?php echo $rowSensors['pin_number'] ?></td>
-                    <td><?php echo $rowSensors['name'] ?></td>
-                    <td><?php echo $rowSensors['location_desciption'] ?></td>
-                    <td><?php echo $rowSensorDatas['frequency'] ?></td>
-                    <td><?php echo $rowSensorDatas['grade_of_dryness'] ?></td>
-                    <td><?php echo $rowSensorDatas['comment'] ?></td>
-                    <td><?php echo $rowSensorDatas['created_at'] ?></td>
-                </tr>
+          <div class="sensor-data" data-id="<?php echo $rowSensors['id'] ?>" data-pin-number="<?php echo $rowSensors['pin_number'] ?>">
+             <h2 class="sensor-data__name"><?php echo $rowSensors['name'] ?></h2>
+             <p class="sensor-data__location-description">
+                 <?php echo $rowSensors['location_desciption'] ?>
+             </p>
+             <div
+               class="sensor-data__status sensor-data__status--grade-of-dryness-<?php echo $rowSensorDatas['grade_of_dryness'] ?>"
+               data-gread-of-dryness="Trockenheitsgrad: <?php echo $rowSensorDatas['grade_of_dryness'] ?>"
+               title="Created @ <?php echo $rowSensorDatas['created_at'] ?>">
+               <span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--0">klatschnass</span>
+               <span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--1">nass</span>
+               <span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--2">feucht</span>
+               <span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--3">trocken</span>
+               <span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--4">staubig</span>
+               <span class="sensor-data__status__frequency">Frequenz: <?php echo $rowSensorDatas['frequency'] ?> Hz</span>
+               <span class="sensor-data__status__comment"><?php if (!empty($rowSensorDatas['comment'])) { ?>Zusätzliche Information: <?php echo $rowSensorDatas['comment']; } else { ?><?php echo "&nbsp;"; } ?></span>
+             </div>
+          </div>
 <?php
                 }
             }
         }
-?>
-            </thead>
-        </table>
-<?php
+
     } else {
 ?>
 		<h3 class="has-error">Database connection failed</h3>

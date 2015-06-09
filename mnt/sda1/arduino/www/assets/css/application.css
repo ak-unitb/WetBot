@@ -8748,3 +8748,83 @@ section {
 #error_explanation h2 {
   font-size: 16px;
 }
+
+
+/* ###--- CUSTOM styles ---### */
+
+.sensor-data {
+  border: 1px solid #222;
+  -webkit-border-radius: 20px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius: 20px;
+  -moz-border-radius-topright: 0;
+  border-radius: 20px;
+  border-top-right-radius: 0;
+  margin: 0 2em 2em 2em;
+  padding: 1em;
+}
+
+.sensor-data .sensor-data__status {
+  margin: 2em;
+  padding: 1em;
+  -webkit-border-radius: 80px;
+  -moz-border-radius: 80px;
+  border-radius: 80px;
+}
+
+
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-0 {
+  background-color: white;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-1 {
+  background-color: blue;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-2 {
+  background-color: green;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-3 {
+  background-color: yellow;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-4 {
+  background-color: red;
+}
+
+.sensor-data .sensor-data__status .sensor-data__status__grade-of-dryness {
+  display: none;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-0 .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness--0 {
+  display: block;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-1 .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness--1 {
+  display: block;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-2 .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness--2 {
+  display: block;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-3 .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness--3 {
+  display: block;
+}
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-4 .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness--4 {
+  display: block;
+}
+.sensor-data .sensor-data__status .sensor-data__status__frequency {
+  color: white;
+  display: block;
+  text-align: center;
+  height: auto;
+  margin: 0;
+}
+.sensor-data .sensor-data__status .sensor-data__status__comment {
+  color: white;
+  display: block;
+  text-align: center;
+  height: auto;
+  margin: 0;
+}
+
+
