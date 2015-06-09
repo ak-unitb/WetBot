@@ -1,5 +1,5 @@
 /*
-YunFreq 0.3a by count0 (Mr. Software) and Tacuma (Mr. Hardware9
+YunFreq 0.3b by count0 (Mr. Software) and Tacuma (Mr. Hardware9
 06. Juni 2015
 basiert auf:
  
@@ -56,7 +56,7 @@ char currentComment[7] = "";
 
 //const long waitIntervallForRead = 86400000; // in millisecs // 24 * 60 * 60 * 1000 => one day
 //const long waitIntervallForRead = 3600000; // in millisecs // one hour per each sensor is best!! (cause: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
-const long waitIntervallForRead = 120000; // in millisecs // 2 * 60 * 1000 => two minutes per each sensor ... for debugging
+const long waitIntervallForRead = 60000; // in millisecs // 1 * 60 * 1000 => one minute for changing the sensor ... for debugging
 
 unsigned long currentFrequency;
 
@@ -111,7 +111,9 @@ void loop() {
     Serial.print(previousSensorNumber);
     Serial.print(" -> frequency: ");
     Serial.print(currentFrequency);
-    Serial.print(" Hz @ ");
+    Serial.print(" Hz => gradeOfDryness: ");
+    Serial.print(getGradeOfDrynessByFrequency(currentFrequency));
+    Serial.print(" @ ");
     digitalClockDisplay();
   }
 
@@ -126,7 +128,7 @@ void loop() {
 
     Serial.println("Error: no signal.");
     digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[previousSensorNumber]], LOW);
-    currentlyHighlightedLedNumberOfSensor[previousSensorNumber] = 4; // TODO: get max graade of dryness ...
+    currentlyHighlightedLedNumberOfSensor[previousSensorNumber] = 4; // TODO: get max grade of dryness ...
     digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
     strcpy(currentComment, "error");
     // saving current led number of sensor for next iterations
@@ -137,23 +139,24 @@ void loop() {
     // keeping the current grade of dryness for sensor
     currentlyHighlightedLedNumberOfSensor[previousSensorNumber] = getGradeOfDrynessByFrequency(currentFrequency);
 
-    if (currentlyHighlightedLedNumberOfSensor[previousSensorNumber] != previouslyHighlightedLedNumberOfSensor[previousSensorNumber]) {
+    if (previouslyHighlightedLedNumberOfSensor[currentSensorNumber] > -1) {
+      digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[currentSensorNumber]], LOW);
+    }
 
-      if (previouslyHighlightedLedNumberOfSensor[previousSensorNumber] > -1) {
-        digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[previousSensorNumber]], LOW);
-      }
+    if (currentlyHighlightedLedNumberOfSensor[previousSensorNumber] != previouslyHighlightedLedNumberOfSensor[previousSensorNumber]) {
 
       Serial.print("####--- ! Dryness changed for Sensor: ");
       Serial.print(previousSensorNumber);
       Serial.print(" to: ");
       Serial.println(currentlyHighlightedLedNumberOfSensor[previousSensorNumber]);
-      digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
       
       strcpy(currentComment, "change");
 
-      // saving current led number of sensor for next iterations
-      previouslyHighlightedLedNumberOfSensor[previousSensorNumber] = currentlyHighlightedLedNumberOfSensor[previousSensorNumber];
     }
+    digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
+
+    // saving current led number of sensor for next iterations
+    previouslyHighlightedLedNumberOfSensor[previousSensorNumber] = currentlyHighlightedLedNumberOfSensor[previousSensorNumber];
   }
 
   // saving the data in DB
@@ -304,7 +307,7 @@ void initAndSyncClock() {
   
   // thie makes this function clallable just once at the very beginning
   setSyncProvider( requestTimeSyncFromYunSide );  //set function to call when sync required
-  setSyncInterval( (uint32_t)(24 * 60 * 59) ); // choosed 84960 secs; a day has 86400  // argument is maximal: 4.294.967.295
+  setSyncInterval( (uint32_t)84960 ); // choosed (24 * 60 * 59) secs; a day has 86400  // argument is maximal: 4.294.967.295
 }
 
 time_t requestTimeSyncFromYunSide() {
