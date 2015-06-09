@@ -13,7 +13,7 @@ The SD-card need to be integrated properly. Use the "[Yún Disk Space Expander](
 Copy the `install.sh` script into the root of your sd-card and execute it. This will install php and configure the uhttpd apropriate. MySQL will be installed. too with the data-directory on the sd-card.
 
 ## Usage
-At the current status the sample usage with a breadborad and LEDs can be sen here:
+At the current status the sample usage with a breadborad and LEDs can be seen here:
 ![YunFreq with LEDs](YunFreq-with-LEDs.png)
-The LEDs are showing the grade of dryness for the last triggert sensor.
+The LEDs are showing the grade of dryness for the last triggered sensor.
 
