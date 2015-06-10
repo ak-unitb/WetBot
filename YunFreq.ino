@@ -1,6 +1,8 @@
 /*
-YunFreq 0.3b by count0 (Mr. Software) and Tacuma (Mr. Hardware9
+YunFreq by count0 (Mr. Software) and Taquma (Mr. Hardware)
 06. Juni 2015
+Letzte Änderung: 10. Juni 2015 by tq
+
 basiert auf:
  
  * FreqCount - Example with serial output
@@ -11,12 +13,19 @@ basiert auf:
  Sensors Input auf Pin 12 / Arduino Yún
  Sensors VCC   auf Pin 14 - 19 / Arduino Yún
  
- Fuer die Lauffaehigkeit ist in der FreqCount.cpp oder so
- eine zeile 556 oder so auskommentiert. (irgendwas mit Timer2 oder so)
+ Fuer die Lauffähigkeit auf dem Yun ist in FreqCount/util/FreqCountTimers.h
+ die Zeile 556, in der dass TimerCounterControlRegister2 auf 0 gesetzt wird, auskommentiert:
+ 556 	//TCCR2B = 0;
+ Warum das funktioniert, ist noch nicht vollstaendig verstanden.
  31.05.2015 / modified by tq
 
+Der Sketch verwendet 21.888 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.471 Bytes (57%) des dynamischen Speichers, 1.089 Bytes für lokale Variablen verbleiben. 
+Das Maximum sind 2.560 Bytes.
 
-Vielen Dank an die Arduino-Community und alle OpenSourc@s in the World!
+Vielen Dank an die Arduino-Community und alle Freundinnen und Freunde des Open-Source-Gedankens.
+
+Copy me, I want to travel...
 
  */
 #include <FreqCount.h>
@@ -76,11 +85,12 @@ void setup() {
     digitalWrite(13, HIGH); // wait for Serial to connect.
   }
   Serial.println("Serial is available.");
+  Serial.println(" ");
   digitalWrite(13, LOW); // Serial now is available, switching of the led
 
-  Serial.println("***  YunFreq 0.3a  ***");
-  Serial.println("***  by tq, count0 6/2015 *** ");
-  Serial.println("***  18.326 Bytes  *** ");
+  Serial.println("***             YunFreq            ***");
+  Serial.println("***       by count0/tq 6/2015      *** ");
+  Serial.println("***  21.888 Bytes Bytes of 28.672  *** ");
   Serial.println("");
 
   delay(200);
