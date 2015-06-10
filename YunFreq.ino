@@ -16,8 +16,8 @@ basiert auf:
  Fuer die Lauffähigkeit auf dem Yun ist in FreqCount/util/FreqCountTimers.h
  die Zeile 556, in der das TimerCounterControlRegister2 auf 0 gesetzt wird, auskommentiert:
  556 	//TCCR2B = 0;
- Der Befehl will Timer/Counter2 stoppen, aber offenbar besitzt der 32U4 nur TimerCounter0,1,3. 
- (siehe Atmel 32U4-Datasheet, S.83, Kapitel 12)
+ Der Befehl will Timer/Counter2 stoppen, aber offenbar besitzt der 32U4 nur TimerCounter0,1,3,4. 
+ (siehe Atmel 32U4-Datasheet, S.83, Kapitel 12 und S.130, Kapitel 15.)
  FreqCountTimers.h wurde umbenannt in FreqCountTimersTq.h und muß im util-Verzeichnis 
  der FreqCount-Library die alte .h-Datei ersetzen.
  Dafür müssen im Code wahrscheinlich noch ein paar Zeiger umgebogen werden oder wir benennen die ganze Library neu...
