@@ -16,8 +16,12 @@ basiert auf:
  Fuer die Lauffähigkeit auf dem Yun ist in FreqCount/util/FreqCountTimers.h
  die Zeile 556, in der das TimerCounterControlRegister2 auf 0 gesetzt wird, auskommentiert:
  556 	//TCCR2B = 0;
- Warum das funktioniert, ist noch nicht vollstaendig verstanden.
- 31.05.2015 / modified by tq
+ Der Befehl will Timer/Counter2 stoppen, aber offenbar besitzt der 32U4 nur TimerCounter0,1,3. 
+ (siehe Atmel 32U4-Datasheet, S.83, Kapitel 12)
+ FreqCountTimers.h wurde umbenannt in FreqCountTimersTq.h und muß im util-Verzeichnis 
+ der FreqCount-Library die alte .h-Datei ersetzen.
+ Dafür müssen im Code wahrscheinlich noch ein paar Zeiger umgebogen werden oder wir benennen die ganze Library neu...
+ 31.05. und 10.6.2015 / modified by tq
 
 Der Sketch verwendet 21.888 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
 Globale Variablen verwenden 1.471 Bytes (57%) des dynamischen Speichers, 1.089 Bytes für lokale Variablen verbleiben. 
