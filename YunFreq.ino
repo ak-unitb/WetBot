@@ -14,7 +14,7 @@ basiert auf:
  Sensors VCC   auf Pin 14 - 19 / Arduino Yún
  
  Fuer die Lauffähigkeit auf dem Yun ist in FreqCount/util/FreqCountTimers.h
- die Zeile 556, in der dass TimerCounterControlRegister2 auf 0 gesetzt wird, auskommentiert:
+ die Zeile 556, in der das TimerCounterControlRegister2 auf 0 gesetzt wird, auskommentiert:
  556 	//TCCR2B = 0;
  Warum das funktioniert, ist noch nicht vollstaendig verstanden.
  31.05.2015 / modified by tq
