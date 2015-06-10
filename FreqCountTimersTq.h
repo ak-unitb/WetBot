@@ -1,7 +1,7 @@
 /* 
 FreqCountTimersTq.h
-is modified FreqCountTimers.h in FreqCount/util by commemting line 556
-556  //  TCCR2B = 0;
+is modified FreqCountTimers.h in FreqCount/util by commemting line 563 (was line 556)
+563  //  TCCR2B = 0;
 modified by Taquma to work on Arduino YUN
 10. Juni 2015
 
