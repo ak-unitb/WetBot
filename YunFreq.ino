@@ -5,17 +5,20 @@ Letzte Änderung: 10. Juni 2015 by tq
 
 basiert auf:
  
- * FreqCount - Example with serial output
+ * FreqCount
  * https://github.com/PaulStoffregen/FreqCount
+ * Example with serial output:
+ * http://www.pjrc.com/teensy/td_libs_FreqCount.html
  *
  * This example code is in the public domain.
 
  Sensors Input auf Pin 12 / Arduino Yún
- Sensors VCC   auf Pin 14 - 19 / Arduino Yún
+ Sensors VCC   auf Pin A0 - A6 / Arduino Yún
  
-Der Sketch verwendet 21.888 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.471 Bytes (57%) des dynamischen Speichers, 1.089 Bytes für lokale Variablen verbleiben. 
+Der Sketch verwendet 21.954 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.515 Bytes (59%) des dynamischen Speichers, 1.045 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
+
 
 Vielen Dank an die Arduino-Community und alle Freundinnen und Freunde des Open-Source-Gedankens.
 
