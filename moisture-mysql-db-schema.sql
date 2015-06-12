@@ -24,6 +24,7 @@ COMMENT = 'The sensors the aruino is connected to. just up to six senso' /* comm
 CREATE TABLE IF NOT EXISTS `moisture`.`sensor_datas` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `frequency` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+  `grade_of_dryness` TINYINT(3) UNSIGNED NOT NULL,
   `comment` VARCHAR(255) NULL DEFAULT NULL COMMENT 'In case of error, an error description should be inserted here.',
   `sensor_id` INT(11) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
