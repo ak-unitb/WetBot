@@ -15,8 +15,8 @@ basiert auf:
  Sensors Input auf Pin 12 / Arduino Yún
  Sensors VCC   auf Pin A0 - A6 / Arduino Yún
  
-Der Sketch verwendet 21.954 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.515 Bytes (59%) des dynamischen Speichers, 1.045 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 21.120 Bytes (73%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.183 Bytes (46%) des dynamischen Speichers, 1.377 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -26,23 +26,19 @@ Copy me, I want to travel...
 
  */
 #include <FreqCount.h>
+
+// includes for YunTimeSync.ino
 #include <Process.h>
 #include <Time.h>
-#include <Wire.h>
+#include "YunTimeSync.h"
+// includes for SaveSensorData.ino
+#include <Process.h>
+#include "SaveSensorData.h"
+// including Sensors
+#include "Sensors.h"
 
-const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013
-
-const int SENSOR_1  = A0;
-const int SENSOR_2  = A1;
-const int SENSOR_3  = A2;
-const int SENSOR_4  = A3;
-const int SENSOR_5  = A4;
-const int SENSOR_6  = A5;
-// const int SENSORs[6] = { SENSOR_1, SENSOR_2, SENSOR_3, SENSOR_4, SENSOR_5, SENSOR_6 };
-const int SENSORs[2] = { SENSOR_1, SENSOR_2 };
-
-int previousSensorNumber = -1;
-int currentSensorNumber = -1;
+sensor_t previousSensor;
+sensor_t activeSensor;
 
                                // || Zustand            || count0 || Tacuma ||
 const int LEDdusty = 4;        // |  staubig         => |  rot    |  rot2   |
@@ -87,24 +83,23 @@ void setup() {
 
   Serial.println("***             YunFreq            ***");
   Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("***  21.888 Bytes Bytes of 28.672  *** ");
+  Serial.println("***  21.120 Bytes of 28.672 (73%)  *** ");
   Serial.println("");
 
   delay(200);
 
-  Serial.println("will initialize the time");
-  initAndSyncClock();
+  Serial.println("will initialize the time sync");
+  initAndSyncTime();
 
   Serial.println("will initialize the LEDs");
   initLeds();
 
   Serial.println("will initialize the SENSORs");
-  initSensors();
+  activeSensor = initSensors();
 
   Serial.println("Messung beginnt.");
   FreqCount.begin(1000);
-  Serial.print("waitIntervallForRead: ");
-  Serial.println(waitIntervallForRead);
+
   delay(1000);
   
 } // end void setup
@@ -113,65 +108,63 @@ void setup() {
 void loop() {
 
   if (FreqCount.available()) {
-    currentFrequency = FreqCount.read();
+
+    activeSensor.frequency = FreqCount.read();
+    activeSensor.gradeOfDryness = getGradeOfDrynessByFrequency(activeSensor.frequency);
+    activeSensor.activeLedIdx = activeSensor.gradeOfDryness;
+
     Serial.print("Sensor: ");
-    Serial.print(previousSensorNumber);
+    Serial.print(previousSensor.id);
     Serial.print(" -> frequency: ");
-    Serial.print(currentFrequency);
+    Serial.print(activeSensor.frequency);
     Serial.print(" Hz => gradeOfDryness: ");
-    Serial.print(getGradeOfDrynessByFrequency(currentFrequency));
+    Serial.print(activeSensor.gradeOfDryness);
     Serial.print(" @ ");
-    digitalClockDisplay();
+    Serial.println(digitalClockDisplay());
   }
 
-  // After reading the Frequency after the delay of this loop we switch to the next SENSOR
-  currentSensorNumber = getNextSensorNumber();
-  if (previousSensorNumber > -1) {
-    digitalWrite(SENSORs[previousSensorNumber], LOW);
-  }
-  digitalWrite(SENSORs[currentSensorNumber], HIGH);
+  // case of ERROR!:
+  if (activeSensor.frequency == 0) {
 
-  if (currentFrequency == 0) {
+    digitalWrite(previousSensor.activeLedIdx, LOW);
+    activeSensor.activeLedIdx = 4; // TODO: get max grade of dryness ...
+    digitalWrite(activeSensor.activeLedIdx, HIGH);
+    strcpy(currentComment, "error");
 
     Serial.println("Error: no signal.");
-    digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[previousSensorNumber]], LOW);
-    currentlyHighlightedLedNumberOfSensor[previousSensorNumber] = 4; // TODO: get max grade of dryness ...
-    digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
-    strcpy(currentComment, "error");
-    // saving current led number of sensor for next iterations
-    previouslyHighlightedLedNumberOfSensor[previousSensorNumber] = currentlyHighlightedLedNumberOfSensor[previousSensorNumber];
 
   } else {
 
-    // keeping the current grade of dryness for sensor
-    currentlyHighlightedLedNumberOfSensor[previousSensorNumber] = getGradeOfDrynessByFrequency(currentFrequency);
+    digitalWrite(previousSensor.activeLedIdx, LOW);
 
-    if (previouslyHighlightedLedNumberOfSensor[currentSensorNumber] > -1) {
-      digitalWrite(LEDs[previouslyHighlightedLedNumberOfSensor[currentSensorNumber]], LOW);
-    }
-
-    if (currentlyHighlightedLedNumberOfSensor[previousSensorNumber] != previouslyHighlightedLedNumberOfSensor[previousSensorNumber]) {
+    if (activeSensor.gradeOfDryness != activeSensor.previousGradeOfDryness) {
 
       Serial.print("####--- ! Dryness changed for Sensor: ");
-      Serial.print(previousSensorNumber);
+      Serial.print(activeSensor.previousGradeOfDryness);
       Serial.print(" to: ");
-      Serial.println(currentlyHighlightedLedNumberOfSensor[previousSensorNumber]);
+      Serial.println(activeSensor.gradeOfDryness);
       
       strcpy(currentComment, "change");
 
     }
-    digitalWrite(LEDs[currentlyHighlightedLedNumberOfSensor[previousSensorNumber]], HIGH);
-
-    // saving current led number of sensor for next iterations
-    previouslyHighlightedLedNumberOfSensor[previousSensorNumber] = currentlyHighlightedLedNumberOfSensor[previousSensorNumber];
+    digitalWrite(activeSensor.activeLedIdx, HIGH);
   }
 
   // saving the data in DB
-  executeMysqlInsert(currentFrequency, currentlyHighlightedLedNumberOfSensor[previousSensorNumber], currentComment, (1 + previousSensorNumber));
+  insertSensorDataByPhpCli(activeSensor.frequency, activeSensor.gradeOfDryness, currentComment, (1 + activeSensor.id));
+
+  // resetting currentComment
   strcpy(currentComment, "");
 
-  // saving current sensor number for next iteration
-  previousSensorNumber = currentSensorNumber;
+  // keeping the gradeOfDryness for the next time, this sensor is triggered
+  activeSensor.previousGradeOfDryness = activeSensor.gradeOfDryness;
+
+  // After reading the frequency and treatment before the delay of this loop we switch to the next SENSOR
+  digitalWrite(activeSensor.pinNumber, LOW);
+  previousSensor = activeSensor; // keep the previous in mind...
+  activeSensor = getNextSensor(activeSensor);
+  digitalWrite(activeSensor.pinNumber, HIGH);
+
 
   delay(waitIntervallForRead);
 } // end void loop
@@ -179,46 +172,6 @@ void loop() {
 
 
 // so to say, private methods ;)
-void initLeds() {
-
-  // init LEDs status for sensor reflecting variables
-  for (i = 0; i < (sizeof(SENSORs)/sizeof(int)); i++) {
-    previouslyHighlightedLedNumberOfSensor[i] = -1;
-    currentlyHighlightedLedNumberOfSensor[i] = -1;
-  }
-
-  Serial.print("LED-Tests: ");
-  delay(800);
-  setupLeds();
-  delay(300);
-  testLedsInOrder(300);
-  Serial.println(" Done!\n");
-}
-
-void setupLeds() {
-  for (i = 0; i < (sizeof(LEDs)/sizeof(int)); i++) {
-
-    pinMode( LEDs[i], OUTPUT );
-    
-    digitalWrite(LEDs[i], HIGH);
-    delay(500);
-    digitalWrite(LEDs[i], LOW);
-  }
-}
-
-void testLedsInOrder(int interruptionTime) {
-  int lastPin = -1;
-  for (i = 0; i <= (sizeof(LEDs)/sizeof(int)); i++) {
-    if ( lastPin != -1 ) {
-      digitalWrite(lastPin, LOW);
-    }
-    if ( i != (sizeof(LEDs)/sizeof(int))) { // not the last iteration...
-      digitalWrite( LEDs[i], HIGH );
-      lastPin = LEDs[i];
-    }
-    delay(interruptionTime);
-  }
-}
 
 /**
  * Formel generiert von www.arndt-bruenner.de/mathe/scripts/regr.htm
@@ -258,124 +211,5 @@ int getGradeOfDrynessByFrequency(float freq) {
   //Serial.println("");
 
   return gradeOfDryness;
-}
-
-void initSensors() {
-
-  for (i = 0; i < (sizeof(SENSORs)/sizeof(int)); i++) {
-    pinMode( SENSORs[i], OUTPUT );
-  }
-
-  // switching to the first sensor:
-  Serial.print("switching to the first sensor: ");
-  Serial.print((1 + previousSensorNumber));
-  Serial.print(" (");
-  Serial.print(SENSORs[previousSensorNumber]);
-  Serial.println(")");
-  previousSensorNumber = 0;
-  digitalWrite(SENSORs[previousSensorNumber], HIGH);
-}
-
-int getNextSensorNumber() {
-
-  if (previousSensorNumber >= (sizeof(SENSORs)/sizeof(int)) - 1) {
-    return 0;
-  }
-  return 1 + previousSensorNumber;
-}
-
-
-// execute a mysql-query via systemCall (provided by Bridge)
-void executeMysqlInsert(long frequency, int gradeOfDryness, char* comment, int sensorNumber) {
-  // INSERT INTO `moisture`.`sensor_datas` (`frequency`, `grade_of_dryness`, `comment`, `sensor_id`) VALUES (<long frequency>, <int gradeOdDryness>, <string comment [error|change]>, <int sensorNumber>);
-  char insertTpl[155] = "mysql -uroot -parduino -e'INSERT INTO `moisture`.`sensor_datas` (`frequency`, `grade_of_dryness`, `comment`, `sensor_id`) VALUES (%lu, %d, \"%s\", %d);'"; // 9 chars to replace
-  char insertStatement[160];
-  int resultStringLength = sprintf(insertStatement, insertTpl, frequency, gradeOfDryness, comment, sensorNumber); // 6+1+6+2
-  if (resultStringLength > 160 || resultStringLength < 0) {
-    Serial.println("ERROR: function executeMysqlInsert: Buffer-Overflow while concatinating mysql-statement!");
-  } else {
-    //Serial.println(insertStatement);
-    Process p;
-    p.runShellCommand(insertStatement);
-    // do nothing until the process finishes, so you get the whole output:
-    while(p.running()) {
-      digitalWrite(13, HIGH); // wait for Serial to connect.
-    };
-    digitalWrite(13, LOW);
-    // mysql -e doesn't has any output, so we needn't to read anything... but anyway:
-    while (p.available()) {
-      int result = p.parseInt();   // look for an integer
-    }
-  }
-}
-
-
-void initAndSyncClock() {
-  
-  // thie makes this function clallable just once at the very beginning
-  setSyncProvider( requestTimeSyncFromYunSide );  //set function to call when sync required
-  setSyncInterval( (uint32_t)84960 ); // choosed (24 * 60 * 59) secs; a day has 86400  // argument is maximal: 4.294.967.295
-}
-
-time_t requestTimeSyncFromYunSide() {
-  unsigned long pctime;
-  char pctimeCharBuf[11] = "";
-  Process p;
-
-  p.runShellCommand("/bin/date +%s");
-  
-  // do nothing until the process finishes, so you get the whole output:
-  while (p.running());
-
-// Read command output. runShellCommand() should have passed "Signal: xx&":
-  int i = 0;
-  while (p.available() > 0) {
-    char c = p.read();
-    if (isdigit(c)) {
-      pctimeCharBuf[i] = c;
-    }
-    //Serial.print(c);
-    i += 1;
-  }
-  //Serial.println(;
-  //Serial.print("pcCharBuf: ");
-  //Serial.println(pctimeCharBuf);
-
-  char *junk;
-  pctime = strtol(pctimeCharBuf, &junk, 10);
-  if (strlen(junk) > 0) { // systemcall response from yun side contains unexpected characters
-    pctime = DEFAULT_TIME; // fall back to defined const fallback @see above
-  }
-  Serial.print("requestTimeSyncFromYunSide => read pctime is: ");
-  Serial.println(pctime);
-
-  return pctime;
-}
-
-void digitalClockDisplay() {
-  // digital clock display of the time
-  printDigits(day(), false);
-  Serial.print(".");
-  printDigits(month(), false);
-  Serial.print(".");
-  Serial.print(year()); 
-  Serial.print(" ");
-  printDigits(hour(), false);
-  printDigits(minute(), true);
-  printDigits(second(), true);
-  Serial.print(" UTC");
-
-  Serial.println(); 
-}
-
-void printDigits(int digits, bool colon){
-  // utility function for digital clock display: prints preceding colon and leading 0
-  if (colon) {
-    Serial.print(":");
-  }
-  if (digits < 10) {
-    Serial.print('0');
-  }
-  Serial.print(digits);
 }
 
