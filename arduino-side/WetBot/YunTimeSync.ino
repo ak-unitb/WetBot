@@ -4,10 +4,6 @@
   Released into the public domain.
 */
 
-/*
- * Currently just used for development and debugging purposes...
- */
-
 bool timeSyncIsInitialized = false;
 
 // main initialization function
@@ -18,7 +14,7 @@ void initAndSyncTime() {
   if (!timeSyncIsInitialized) {
     setSyncProvider( requestTimeSyncFromYunSide );  //set function to call when sync required
     
-    uint32_t syncInterval = 2000; // choosed (24 * 60 * 59) secs; a day has 86400  // argument is maximal: 4.294.967.295
+    uint32_t syncInterval = 86400; // choosed (24 * 60 * 59) secs; a day has 86400  // argument is maximal: 4.294.967.295
     
     setSyncInterval( syncInterval );
   }
@@ -57,6 +53,9 @@ time_t requestTimeSyncFromYunSide() {
 }
 
 
+/*
+ * Currently just used for development and debugging purposes...
+ */
 //---- utility functions for time formatting
 
 // display of the time

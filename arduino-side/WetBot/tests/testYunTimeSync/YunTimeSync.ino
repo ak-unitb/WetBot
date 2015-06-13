@@ -1,4 +1,8 @@
-
+/*
+  YùnTimeSync - Implemntation to sync the time from the linino-/Yùn-side
+  Created by count0, June 11, 2015.
+  Released into the public domain.
+*/
 
 bool timeSyncIsInitialized = false;
 
@@ -15,7 +19,7 @@ void initAndSyncTime() {
     setSyncInterval( syncInterval );
   }
 }
-// the heart - time syncing by requesting the linino/YÃ¹n-side
+// the heart - time syncing by requesting the linino/Yùn-side
 time_t requestTimeSyncFromYunSide() {
 
   const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013
@@ -52,6 +56,9 @@ time_t requestTimeSyncFromYunSide() {
 }
 
 
+/*
+ * Currently just used for development and debugging purposes...
+ */
 //---- utility functions for time formatting
 
 // display of the time
@@ -95,10 +102,6 @@ String toDigits(int digits, bool colon){
   
   result =  result + digitStr;
   
-  //char* buf = new char(charArrayLength);
-  //result.toCharArray(buf, charArrayLength);
-  //return buf;
   return result;
 }
-
-
+/* */

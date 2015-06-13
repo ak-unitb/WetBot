@@ -4,11 +4,11 @@
   Released into the public domain.
 */
 
+void initAndSyncTime();
+
 /*
  * Currently just used for development and debugging purposes...
  */
-
-void initAndSyncTime();
 String digitalClockDisplay();
 String toDigits(int digits, bool colon);
 /* */

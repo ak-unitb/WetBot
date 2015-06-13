@@ -3,25 +3,29 @@
 
 #include <Arduino.h>
 
-struct sensor_t {
-  int id;
-  int activeLedIdx;
-  uint32_t frequency;
-  uint8_t pinNumber;
-  int gradeOfDryness;
-  int previousGradeOfDryness;
-  uint32_t frequencyThresholdTooDry;
-  uint32_t frequencyThresholdTooWet;
+class Sensor {
+  public:
+    int id;
+    uint8_t sensorPinNumber;
+    uint8_t relayPinNumber;
+    uint32_t frequency;
+    int gradeOfDryness; /* 1: tooWet (really less dryness); 2: wet (some more dryness), 3: tooDry (a lot of dryness)  */
+    int previousGradeOfDryness;
+    uint32_t frequencyThresholdTooDry;
+    uint32_t frequencyThresholdTooWet;
+
+    Sensor () {}; // null constructor: should NOT be used but for tests!
+    Sensor (int, uint32_t, uint32_t); // id, frequencyThresholdTooDry, frequencyThresholdTooWet
+    void setGradeOfDrynessByFrequency(uint32_t);
+    const char* getGradeOfDrynessLiterally();
+    bool justChangedGradeOfDryness();
 };
 
-sensor_t initSensors();
+Sensor initSensors();
 
-sensor_t getNextSensor(sensor_t sensor);
-sensor_t getPreviousSensor(sensor_t sensor);
-void printSensor(sensor_t sensor);
+Sensor getNextSensor(Sensor sensor);
 
-extern sensor_t SENSORs[5];
-extern sensor_t previousSensor;
-extern sensor_t activeSensor;
+extern Sensor SENSORs[2];
 
 #endif
+

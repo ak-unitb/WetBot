@@ -1,42 +1,85 @@
 
+#include <Arduino.h>
 #include "Sensors.h"
 
-sensor_t SENSORs[5];
+Sensor::Sensor (int pId, uint32_t pfrequencyThresholdTooDry, uint32_t pfrequencyThresholdTooWet) {
+  id = pId;
+  sensorPinNumber = (A0 + pId); // using analog pins A0 to A5
+  relayPinNumber = (4 + pId); // using digital pins from 4 to 9
+  frequency = (uint32_t)1;
+  gradeOfDryness = -1;
+  previousGradeOfDryness = 1;
+  frequencyThresholdTooDry = pfrequencyThresholdTooDry;
+  frequencyThresholdTooWet = pfrequencyThresholdTooWet;
+}
 
-sensor_t previousSensor;
-sensor_t activeSensor;
+void Sensor::setGradeOfDrynessByFrequency(uint32_t pFrequency) {
+  //Serial.print("Sensor::setGradeOfDrynessByFrequency -> (before)previousGradeOfDryness: ");
+  //Serial.println(previousGradeOfDryness);
+  previousGradeOfDryness = gradeOfDryness; // saving the current value before setting a new one...
+  //Serial.print("Sensor::setGradeOfDrynessByFrequency -> (after)previousGradeOfDryness: ");
+  //Serial.println(previousGradeOfDryness);
 
-sensor_t initSensors() {
-  for (int i = 0; i < 5; i++) {
+  frequency = pFrequency;
+  /* 1: tooWet (really less dryness); 2: wet (some more dryness), 3: tooDry (a lot of dryness)  */
+  if (pFrequency >= frequencyThresholdTooDry) {
+    gradeOfDryness = 3;
+  } else if (pFrequency <= frequencyThresholdTooWet) {
+    gradeOfDryness = 1;
+  } else {
+    gradeOfDryness = 2;
+  }
+}
+
+/* 1: tooWet (really less dryness); 2: wet (some more dryness), 3: tooDry (a lot of dryness)  */
+const char* Sensor::getGradeOfDrynessLiterally() {
+  if (gradeOfDryness <= 1) {
+    return "tooWet";
+  } else if (gradeOfDryness == 2) {
+    return "wet";
+  } else if (gradeOfDryness >= 3) {
+    return "tooDry";
+  }
+}
+
+bool Sensor::justChangedGradeOfDryness() {
+  return previousGradeOfDryness != gradeOfDryness;
+}
+
+Sensor initSensors() {
+  for (int i = 0; i < 2; i++) {
     // initialize the sensor struct
-    SENSORs[i].id = i;
-    SENSORs[i].activeLedIdx = -1;
-    SENSORs[i].frequency = 0;
-    SENSORs[i].pinNumber = (A0 + i);
-    SENSORs[i].gradeOfDryness = 0;
-    SENSORs[i].previousGradeOfDryness = 0;
-    SENSORs[i].frequencyThresholdTooDry = 50000;
-    SENSORs[i].frequencyThresholdTooWet = 14000;
+
+    Sensor sensor (i, (uint32_t)(50000 + i), (uint32_t)(14000 + i));
+
+    SENSORs[i] = sensor;
 
     // initialize the sensors pin
-    pinMode(SENSORs[i].pinNumber, OUTPUT);
+    pinMode(SENSORs[i].sensorPinNumber, OUTPUT);
+    // initialize the relays pin
+    pinMode(SENSORs[i].relayPinNumber, OUTPUT);
   }
 
-  digitalWrite(SENSORs[0].pinNumber, HIGH);
+  // power on the first sensor
+  digitalWrite(SENSORs[0].sensorPinNumber, HIGH);
   return SENSORs[0];
 }
 
-sensor_t getNextSensor(sensor_t sensor) {
-  if (sensor.id >= (sizeof(SENSORs) / sizeof(sensor_t)) - 1) {
-    return SENSORs[0];
-  }
-  return SENSORs[(1 + sensor.id)];
-}
+Sensor getNextSensor(Sensor sensor) {
+  // power off the current sensor
+  digitalWrite(sensor.sensorPinNumber, LOW);
+  // put the current status of this sensor into the array
+  SENSORs[sensor.id] = sensor;
 
-sensor_t getPreviousSensor(sensor_t sensor) {
-  if (sensor.id <= 0) {
-    return SENSORs[((sizeof(SENSORs) / sizeof(sensor_t)) - 1)];
+  Sensor nextSensor;
+  if (sensor.id >= (sizeof(SENSORs) / sizeof(Sensor)) - 1) {
+    nextSensor = SENSORs[0];
+  } else {
+    nextSensor =  SENSORs[(1 + sensor.id)];
   }
-  return SENSORs[(sensor.id - 1)];
+
+  // power on the next sensor
+  digitalWrite(nextSensor.sensorPinNumber, HIGH);
+  return nextSensor;
 }
 
