@@ -1,10 +1,9 @@
-void initLeds() {
+/**
+ * Just for development and debugging purposes...
+ */
 
-  // init LEDs status for sensor reflecting variables
-  for (i = 0; i < (sizeof(SENSORs)/sizeof(int)); i++) {
-    previouslyHighlightedLedNumberOfSensor[i] = -1;
-    currentlyHighlightedLedNumberOfSensor[i] = -1;
-  }
+
+void initLeds() {
 
   Serial.print("LED-Tests: ");
   delay(800);
@@ -38,3 +37,4 @@ void testLedsInOrder(int interruptionTime) {
     delay(500);
   }
 }
+/* */

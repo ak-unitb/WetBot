@@ -3,15 +3,18 @@
 
 sensor_t SENSORs[5];
 
+sensor_t previousSensor;
+sensor_t activeSensor;
+
 sensor_t initSensors() {
   for (int i = 0; i < 5; i++) {
     // initialize the sensor struct
     SENSORs[i].id = i;
-    SENSORs[i].activeLedIdx = 4;
+    SENSORs[i].activeLedIdx = -1;
     SENSORs[i].frequency = 0;
     SENSORs[i].pinNumber = (A0 + i);
-    SENSORs[i].gradeOfDryness = 4;
-    SENSORs[i].previousGradeOfDryness = 4;
+    SENSORs[i].gradeOfDryness = 0;
+    SENSORs[i].previousGradeOfDryness = 0;
     SENSORs[i].frequencyThresholdTooDry = 50000;
     SENSORs[i].frequencyThresholdTooWet = 14000;
 

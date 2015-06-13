@@ -15,8 +15,8 @@ basiert auf:
  Sensors Input auf Pin 12 / Arduino Yún
  Sensors VCC   auf Pin A0 - A6 / Arduino Yún
  
-Der Sketch verwendet 21.120 Bytes (73%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.183 Bytes (46%) des dynamischen Speichers, 1.377 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 21.010 Bytes (73%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.456 Bytes (56%) des dynamischen Speichers, 1.377 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -31,14 +31,13 @@ Copy me, I want to travel...
 #include <Process.h>
 #include <Time.h>
 #include "YunTimeSync.h"
-// includes for SaveSensorData.ino
+
+// includes for SaveSensorData.ino -> chekced per test!
 #include <Process.h>
 #include "SaveSensorData.h"
+
 // including Sensors
 #include "Sensors.h"
-
-sensor_t previousSensor;
-sensor_t activeSensor;
 
                                // || Zustand            || count0 || Tacuma ||
 const int LEDdusty = 4;        // |  staubig         => |  rot    |  rot2   |
@@ -49,8 +48,6 @@ const int LEDjustWatered = 8;  // |  frisch gegossen => |  weiss  |  blau   |
 
 const int LEDs[5]= { LEDjustWatered, LEDwet, LEDhumid, LEDdry, LEDdusty };
 
-int previouslyHighlightedLedNumberOfSensor[(sizeof(SENSORs)/sizeof(int))] ={};
-int currentlyHighlightedLedNumberOfSensor[(sizeof(SENSORs)/sizeof(int))] = {};
 
 char currentComment[7] = "";
 
@@ -92,10 +89,13 @@ void setup() {
   initAndSyncTime();
 
   Serial.println("will initialize the LEDs");
-  initLeds();
+  //initLeds();
 
   Serial.println("will initialize the SENSORs");
   activeSensor = initSensors();
+
+  Serial.println("will initialize the SaveSensorData");  
+  initSaveSensorData();
 
   Serial.println("Messung beginnt.");
   FreqCount.begin(1000);
@@ -114,7 +114,7 @@ void loop() {
     activeSensor.activeLedIdx = activeSensor.gradeOfDryness;
 
     Serial.print("Sensor: ");
-    Serial.print(previousSensor.id);
+    Serial.print(activeSensor.id);
     Serial.print(" -> frequency: ");
     Serial.print(activeSensor.frequency);
     Serial.print(" Hz => gradeOfDryness: ");

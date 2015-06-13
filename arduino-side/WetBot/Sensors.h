@@ -21,5 +21,7 @@ sensor_t getPreviousSensor(sensor_t sensor);
 void printSensor(sensor_t sensor);
 
 extern sensor_t SENSORs[5];
+extern sensor_t previousSensor;
+extern sensor_t activeSensor;
 
 #endif

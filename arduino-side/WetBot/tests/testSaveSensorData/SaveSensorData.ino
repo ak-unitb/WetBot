@@ -20,6 +20,8 @@ bool insertSensorDataByPhpCli(long frequency, int gradeOfDryness, char* comment,
     return false;
   } else {
     Process p;
+    Serial.print("sysCall: ");
+    Serial.println(phpCliCall);
     p.runShellCommand(phpCliCall);
     // do nothing until the process finishes, so you get the whole output:
     while(p.running()) {
@@ -35,9 +37,12 @@ bool insertSensorDataByPhpCli(long frequency, int gradeOfDryness, char* comment,
       charBuf[i] = c;
       i += 1;
     }
+    Serial.println(charBuf);
     if (strcmp(charBuf, "SUCCESS") != 0) {
+      Serial.println("Error occured!");
       return false;
     }
+
   }
   return true;
 }

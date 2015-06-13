@@ -1,12 +1,4 @@
-/*
-  YùnTimeSync - Implemntation to sync the time from the linino-/Yùn-side
-  Created by count0, June 11, 2015.
-  Released into the public domain.
-*/
 
-/*
- * Currently just used for development and debugging purposes...
- */
 
 bool timeSyncIsInitialized = false;
 
@@ -23,7 +15,7 @@ void initAndSyncTime() {
     setSyncInterval( syncInterval );
   }
 }
-// the heart - time syncing by requesting the linino/Yùn-side
+// the heart - time syncing by requesting the linino/YÃ¹n-side
 time_t requestTimeSyncFromYunSide() {
 
   const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013
@@ -50,9 +42,12 @@ time_t requestTimeSyncFromYunSide() {
   char *junk;
   pctime = strtol(pctimeCharBuf, &junk, 10);
   if (strlen(junk) > 0) { // systemcall response from yun side contains unexpected characters
+    Serial.println("Fallback: take the default time Jan 1 2013");
     pctime = DEFAULT_TIME; // fall back to defined const fallback @see above
   }
 
+  Serial.print("will return: ");
+  Serial.println(pctime);
   return pctime;
 }
 
@@ -63,9 +58,11 @@ time_t requestTimeSyncFromYunSide() {
 String digitalClockDisplay() {
 
   String result;
+  Serial.print("digitalClockDisplay: after init the vars");
 
   char yearStr[5];
   sprintf(yearStr, "%d", year());
+  Serial.println("digitalClockDisplay: after year to str");
   
   result = toDigits(day(), false) + "." +
            toDigits(month(), false) + "." +
@@ -74,6 +71,7 @@ String digitalClockDisplay() {
            toDigits(minute(), true) +
            toDigits(second(), true) +
            " UTC";
+  Serial.println("digitalClockDisplay: after concat date");
 
   return result;
 }
@@ -96,7 +94,11 @@ String toDigits(int digits, bool colon){
   sprintf(digitStr, "%d", digits);
   
   result =  result + digitStr;
-
+  
+  //char* buf = new char(charArrayLength);
+  //result.toCharArray(buf, charArrayLength);
+  //return buf;
   return result;
 }
-/* */
+
+
