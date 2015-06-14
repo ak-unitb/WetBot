@@ -1,5 +1,5 @@
 /**
- * This snippets saves data in the by using a php-cli executable php script
+ * This snippets saves data in the mysql-db by using a php-cli executable php script
  * Prerequisites:
  *   - installed php5-cli on the linino-/Yùn-side
  *   - the file insertSensorData.php on a sd-card located @ /mnt/sda1/arduino/
@@ -35,6 +35,7 @@ bool insertSensorDataByPhpCli(long frequency, int gradeOfDryness, char* comment,
       charBuf[i] = c;
       i += 1;
     }
+    // if script returned any error...
     if (strcmp(charBuf, "SUCCESS") != 0) {
       return false;
     }

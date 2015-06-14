@@ -59,12 +59,12 @@ void setup() {
 
   // waiting for serial just for debugging purposes
   while (!Serial) {
-    // wait for serial port to connect. Needed for Leonardo only
-    digitalWrite(13, HIGH); // wait for Serial to connect.
+    // wait for serial port to connect.
+    digitalWrite(13, HIGH);
   }
   Serial.println("Serial is available.");
   Serial.println(" ");
-  digitalWrite(13, LOW); // Serial now is available, switching of the led
+  digitalWrite(13, LOW); // Serial now is available, switching off the led
 
   Serial.println("***             YunFreq            *** ");
   Serial.println("***       by count0/tq 6/2015      *** ");
@@ -77,19 +77,15 @@ void setup() {
   initAndSyncTime();
   Serial.println(" .... DONE!");
 
-  //Serial.println("will initialize the LEDs");
-  //initLeds();
-  //Serial.println(" .... DONE!");
+  Serial.print("will initialize the saving of sensor data");
+  initSaveSensorData();
+  Serial.println(" .... DONE!");
 
   Serial.print("will initialize the SENSORs");
   activeSensor = initSensors();
   Serial.println(" .... DONE!");
 
-  Serial.print("will initialize the SaveSensorData");  
-  initSaveSensorData();
-  Serial.println(" .... DONE!");
-
-  Serial.print("Measuring starts for sensor with id: ");
+  Serial.print("Measuring starts for first sensor with id: ");
   Serial.println(activeSensor.id);
   FreqCount.begin(1000);
 

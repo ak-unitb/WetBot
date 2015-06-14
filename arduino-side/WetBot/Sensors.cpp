@@ -14,11 +14,8 @@ Sensor::Sensor (int pId, uint32_t pfrequencyThresholdTooDry, uint32_t pfrequency
 }
 
 void Sensor::setGradeOfDrynessByFrequency(uint32_t pFrequency) {
-  //Serial.print("Sensor::setGradeOfDrynessByFrequency -> (before)previousGradeOfDryness: ");
-  //Serial.println(previousGradeOfDryness);
+
   previousGradeOfDryness = gradeOfDryness; // saving the current value before setting a new one...
-  //Serial.print("Sensor::setGradeOfDrynessByFrequency -> (after)previousGradeOfDryness: ");
-  //Serial.println(previousGradeOfDryness);
 
   frequency = pFrequency;
   /* 1: tooWet (really less dryness); 2: wet (some more dryness), 3: tooDry (a lot of dryness)  */
@@ -54,9 +51,9 @@ Sensor initSensors() {
 
     SENSORs[i] = sensor;
 
-    // initialize the sensors pin
+    // initialize the pin of the sensor
     pinMode(SENSORs[i].sensorPinNumber, OUTPUT);
-    // initialize the relays pin
+    // initialize the pin of the relay
     pinMode(SENSORs[i].relayPinNumber, OUTPUT);
   }
 
@@ -66,8 +63,10 @@ Sensor initSensors() {
 }
 
 Sensor getNextSensor(Sensor sensor) {
+
   // power off the current sensor
   digitalWrite(sensor.sensorPinNumber, LOW);
+
   // put the current status of this sensor into the array
   SENSORs[sensor.id] = sensor;
 

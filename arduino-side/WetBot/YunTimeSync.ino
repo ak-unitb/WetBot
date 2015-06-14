@@ -14,11 +14,12 @@ void initAndSyncTime() {
   if (!timeSyncIsInitialized) {
     setSyncProvider( requestTimeSyncFromYunSide );  //set function to call when sync required
     
-    uint32_t syncInterval = 86400; // choosed (24 * 60 * 59) secs; a day has 86400  // argument is maximal: 4.294.967.295
+    uint32_t syncInterval = 84960; // choosed (24 * 60 * 59 = 84960) secs; a day has 86400  // value is maximal: 4.294.967.295
     
     setSyncInterval( syncInterval );
   }
 }
+
 // the heart - time syncing by requesting the linino/Yùn-side
 time_t requestTimeSyncFromYunSide() {
 
@@ -55,6 +56,7 @@ time_t requestTimeSyncFromYunSide() {
 
 /*
  * Currently just used for development and debugging purposes...
+ *   probably must not be used in productive environment... String can be quite costly!
  */
 //---- utility functions for time formatting
 
