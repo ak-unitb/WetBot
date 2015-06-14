@@ -36,6 +36,8 @@ Copy me, I want to travel...
 #include <Process.h>
 #include "SaveSensorData.h"
 
+char currentComment[7] = "";
+
 // including Sensors -> checked per test!
 #include "Sensors.h"
 
@@ -44,34 +46,9 @@ Sensor activeSensor;
 
 
 
-
-
-
-
-
-
-
-
-
-                               // || Zustand            || count0 || Tacuma ||
-const int LEDdusty = 4;        // |  staubig         => |  rot    |  rot2   |
-const int LEDdry = 5;          // |  trocken         => |  gelb   |  rot1   |
-const int LEDhumid = 6;        // |  feucht          => |  gruen  |  gelb   |
-const int LEDwet = 7;          // |  nass            => |  blau   |  gruen  |
-const int LEDjustWatered = 8;  // |  frisch gegossen => |  weiss  |  blau   |
-
-const int LEDs[5]= { LEDjustWatered, LEDwet, LEDhumid, LEDdry, LEDdusty };
-
-
-char currentComment[7] = "";
-
-
-
 //const long waitIntervallForRead = 86400000; // in millisecs // 24 * 60 * 60 * 1000 => one day
 //const long waitIntervallForRead = 3600000; // in millisecs // one hour per each sensor is best!! (cause: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
 const long waitIntervallForRead = 60000; // in millisecs // 1 * 60 * 1000 => one minute for changing the sensor ... for debugging
-
-int i = 0; // global iteration counter variable (take care, it's global ;) )
 
 
 
