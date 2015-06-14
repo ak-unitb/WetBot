@@ -15,8 +15,8 @@ basiert auf:
  Sensors Input auf Pin 12 / Arduino Yún
  Sensors VCC   auf Pin A0 - A6 / Arduino Yún
  
-Der Sketch verwendet 21.010 Bytes (73%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.456 Bytes (56%) des dynamischen Speichers, 1.377 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 19.270 Bytes (67%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.179 Bytes (45%) des dynamischen Speichers, 1.381 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -66,9 +66,9 @@ void setup() {
   Serial.println(" ");
   digitalWrite(13, LOW); // Serial now is available, switching of the led
 
-  Serial.println("***             YunFreq            ***");
+  Serial.println("***             YunFreq            *** ");
   Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("***  21.120 Bytes of 28.672 (73%)  *** ");
+  Serial.println("***  19.270 Bytes of 28.672 (67%)  *** ");
   Serial.println("");
 
   delay(200);

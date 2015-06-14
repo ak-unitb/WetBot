@@ -50,7 +50,7 @@ Sensor initSensors() {
   for (int i = 0; i < 2; i++) {
     // initialize the sensor struct
 
-    Sensor sensor (i, (uint32_t)(30000), (uint32_t)(15000));
+    Sensor sensor (i, (uint32_t)(29629), (uint32_t)(17000));
 
     SENSORs[i] = sensor;
 
