@@ -27,7 +27,7 @@
         } else {
             // not enough valid arguments given:
             // we simple stop the ongoing process and return none zero.
-            echo "ERROR: not enough valid parameters\n";
+            echo "ERROR 1";
             return array();
         }
     }
@@ -36,15 +36,14 @@
     $params = parseAndValidateArguments($argv);
     if (count($params) > 0) {
         $insertStatement = 'INSERT INTO `moisture`.`sensor_datas` (`frequency`, `grade_of_dryness`, `comment`, `sensor_id`) VALUES ('. $params['frequency'] .', '. $params['grade_of_dryness'] .', "'. $params['comment'] .'", '. $params['sensor_id'] .');';
-        echo $insertStatement;
 
         $rs = $conn->query($insertStatement);
         if ($rs === false) {
             // we simple stop the ongoing process and return none zero.
-            echo "ERROR: sql query failed\n";
+            echo "ERROR 2";
         } else {
             // success: return 1;
-            echo "SUCCESS\n";
+            echo "SUCCESS";
         }
     }
 ?>
