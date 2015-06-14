@@ -1,0 +1,37 @@
+(19226 +
+19158 +
+19058 +
+18977 +
+18796 +
+18595 +
+18337 +
+18077 +
+17737 +
+17314) / 10
+
+
+
+
+SELECT
+        AVG(last30.frequency) AS average_last30,
+        AVG(last5.frequency) AS average_last5,
+        (AVG(last30.frequency) - AVG(last5.frequency)) AS delta,
+        (AVG(last30.frequency) - AVG(last5.frequency)) < 0 AS getting_dryer
+FROM (
+        SELECT
+                frequency
+        FROM
+                sensor_datas
+        WHERE
+                sensor_id = 2
+        ORDER BY created_at DESC LIMIT 30
+    ) last30,
+    (
+        SELECT
+                frequency
+        FROM
+                sensor_datas
+        WHERE
+                sensor_id = 2
+        ORDER BY created_at DESC LIMIT 5
+     ) last5;
