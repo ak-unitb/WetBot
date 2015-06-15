@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YunFreq - Index</title>
-    <meta name="description" content="YunFreq - Index">
+    <title>WetBot</title>
+    <meta name="description" content="WetBot - automatisches Bewässerungssystem auf Basis des ArduinoYùn">
     <link rel="stylesheet" media="all" href="/sd/assets/css/application.css">
     <script src="/sd/assets/js/application.js"></script>
   </head>
@@ -12,17 +12,17 @@
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
+              <span class="sr-only">Navigation auf-/zuklappen</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/sd/">Home</a>
+            <a class="navbar-brand" href="/sd/">WetBot</a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <li><a href="/sd/sensors/">Sensors</a></li>
-              <li><a href="/sd/last-100.php">letzte hundert Einträge</a></li>
+              <li><a href="/sd/sensors/">Sensoren</a></li>
+              <li><a href="/sd/last-100.php">Sensor-Daten</a></li>
               <li><a href="/cgi-bin/luci/webpanel/homepage">Yun-Admin</a></li>
             </ul>
           </div>

@@ -2,7 +2,7 @@
     require_once('../incs/db.php');
 ?>
 <?php include "../incs/html_head.php" ?>
-    <h1>Bestehenden Sensor bearbeiten</h1>
+    <h1>Sensor bearbeiten</h1>
 <?php
     if ($conn) {
 ?>

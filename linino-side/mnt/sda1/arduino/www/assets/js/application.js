@@ -13923,12 +13923,16 @@ return jQuery;
 $(document).ready(function(){
     $('.filterable .btn-filter').click(function(){
         var $panel = $(this).parents('.filterable'),
-        $filters = $panel.find('.filters input'),
-        $tbody = $panel.find('.table tbody');
+			$filterContainer = $panel.find('.filters'),
+        	$filters = $filterContainer.find('input, select'),
+        	$tbody = $panel.find('.table tbody');
+
         if ($filters.prop('disabled') == true) {
+			$filterContainer.show();
             $filters.prop('disabled', false);
             $filters.first().focus();
         } else {
+			$filterContainer.hide();
             $filters.val('').prop('disabled', true);
             $tbody.find('.no-result').remove();
             $tbody.find('tr').show();

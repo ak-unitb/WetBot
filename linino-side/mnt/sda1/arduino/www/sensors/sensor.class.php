@@ -16,10 +16,14 @@
 				$errors['name'] = 'Name darf nicht leer sein!';
 			}
 			if (empty($this->frequency_threeshold_too_dry)) {
-				$errors['frequency_threeshold_too_dry'] = 'Name darf nicht leer sein!';
+				$errors['frequency_threeshold_too_dry'] = 'Frequenz darf nicht leer sein!';
+			} else if (!is_numeric($this->frequency_threeshold_too_dry)) {
+				$errors['frequency_threeshold_too_dry'] = 'Frequenz muss ein numerischer Wert sein!';
 			}
 			if (empty($this->frequency_threeshold_too_wet)) {
-				$errors['frequency_threeshold_too_wet'] = 'Name darf nicht leer sein!';
+				$errors['frequency_threeshold_too_wet'] = 'Frequenz darf nicht leer sein!';
+			} else if (!is_numeric($this->frequency_threeshold_too_wet)) {
+				$errors['frequency_threeshold_too_wet'] = 'Frequenz muss ein numerischer Wert sein!';
 			}
 			if (empty($this->location_description)) {
 				$warnings['location_description'] = 'Beschreibung ist leer.';

@@ -52,15 +52,7 @@
 		}
 	}
 
-?>
-
-<pre><code>
-<?php var_dump($sensor); ?><br>
-<?php var_dump($validationResult['errors']); ?><br>
-<?php var_dump($validationResult['warnings']); ?><br>
-</code></pre>
-
-<?php
+	// start HTML:
 	if ($saved) {
 ?>
     <p class="text-message bg-success">Der Sensor wurde gespeichert.</p>

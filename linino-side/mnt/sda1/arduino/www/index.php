@@ -3,7 +3,7 @@
 ?>
 <?php include "incs/html_head.php" ?>
 
-          <h1>WetBot - Aktuelle Werte</h1>
+          <h1>Aktuelle Werte</h1>
 <?php
     if ($conn) {
 ?>
