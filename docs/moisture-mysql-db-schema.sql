@@ -8,13 +8,17 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-ALTER SCHEMA `moisture`  DEFAULT CHARACTER SET utf8  DEFAULT COLLATE utf8_unicode_ci ;
+DROP SCHEMA IF EXISTS `moisture`;
+CREATE SCHEMA `moisture`  DEFAULT CHARACTER SET utf8  DEFAULT COLLATE utf8_unicode_ci ;
 
 CREATE TABLE IF NOT EXISTS `moisture`.`sensors` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `pin_number` VARCHAR(2) NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `location_desciption` TEXT NULL DEFAULT NULL,
+  `sensor_pin_number` VARCHAR(2) NOT NULL,
+  `relay_pin_number` VARCHAR(2) NOT NULL,
+  `frequency_threeshold_too_dry` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+  `frequency_threeshold_too_wet` INT(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -40,6 +44,10 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci
 COMMENT = 'The table for analytics and statistics of the measured datas' /* comment truncated */ /*.*/;
 
+
+INSERT INTO `moisture`.`sensors` (`name`, `location_desciption`, `sensor_pin_number`, `relay_pin_number`, `frequency_threeshold_too_dry`, `frequency_threeshold_too_wet`) VALUES
+('SENSOR_0', 'Noch kein fester Platz', 18, 4, 29629, 17000),
+('SENSOR_1', 'Noch kein fester Platz', 19, 5, 29629, 17000);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
