@@ -13920,6 +13920,13 @@ return jQuery;
 //
 
 
+
+/**
+ *
+ * inspired by: http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
+ *
+ */
+
 $(document).ready(function(){
     $('.filterable .btn-filter').click(function(){
         var $panel = $(this).parents('.filterable'),
@@ -13927,15 +13934,17 @@ $(document).ready(function(){
         	$filters = $filterContainer.find('input, select'),
         	$tbody = $panel.find('.table tbody');
 
+		console.log($filterContainer);
+
         if ($filters.prop('disabled') == true) {
 			$filterContainer.show();
             $filters.prop('disabled', false);
             $filters.first().focus();
         } else {
-			$filterContainer.hide();
             $filters.val('').prop('disabled', true);
             $tbody.find('.no-result').remove();
-            $tbody.find('tr').show();
+            //$tbody.find('tr').show();
+			$filterContainer.hide();
         }
     });
 });

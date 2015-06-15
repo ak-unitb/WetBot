@@ -48,29 +48,31 @@
 		                    <button class="btn btn-default btn-xs btn-filter" type="button"><span class="glyphicon glyphicon-filter"></span> Filter</button>
 		                </div>
 		            </div>
-			        <table class="table table-striped table-hover">
+			        <table class="table table-striped table-hover rwd-table">
 			            <thead>
 			                <tr>
-			                    <!--<th>ID</th>-->
-			                    <th>Frequenz</th>
+			                    <!--<th class="hidden-xs">ID</th>-->
+			                    <th class="hidden-xs">Frequenz</th>
 			                    <th>Grad der Trockenheit</th>
-			                    <th>Kommentar</th>
+			                    <th class="hidden-xs">Kommentar</th>
 			                    <th>Sensor-Name</th>
 			                    <th>gespeichert am/um</th>
 			                </tr>
+			            </thead>
+			            <tbody>
 		                    <tr class="filters">
-								<!--<th></th>-->
-		                        <th></th>
-		                        <th>
+								<!--<td></td>-->
+		                        <td data-th="Filter"></td>
+		                        <td data-th="Grad der Trockenheit">
 									<select class="form-control" name="grade_of_dryness" disabled>
 										<option value="">-</option>
 										<option value="3" <?php echo !empty($_GET['grade_of_dryness']) && $_GET['grade_of_dryness'] == 3 ? 'selected' : ''; ?>>3</option>
 										<option value="2" <?php echo !empty($_GET['grade_of_dryness']) && $_GET['grade_of_dryness'] == 2 ? 'selected' : ''; ?>>2</option>
 										<option value="1" <?php echo !empty($_GET['grade_of_dryness']) && $_GET['grade_of_dryness'] == 1 ? 'selected' : ''; ?>>1</option>
 									</select>
-								</th>
-		                        <th><input type="text" class="form-control" name="comment" placeholder="" value="<?php echo !empty($_GET['comment']) ? $_GET['comment'] : ''; ?>" disabled></th>
-		                        <th>
+								</td>
+		                        <td data-th="Kommentar"><input type="text" class="form-control" name="comment" placeholder="" value="<?php echo !empty($_GET['comment']) ? $_GET['comment'] : ''; ?>" disabled></td>
+		                        <td data-th="Sensor-ID">
 									<select class="form-control" name="sensor_id" disabled>
 										<option value="">-</option>
 										<option value="1" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 1 ? 'selected' : ''; ?>>1</option>
@@ -80,22 +82,20 @@
 										<option value="5" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 5 ? 'selected' : ''; ?>>5</option>
 										<option value="6" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 6 ? 'selected' : ''; ?>>6</option>
 									</select>
-								</th>
-								<th><button type="submit" class="btn btn-primary pull-right">Filter anwenden</button></th>
+								</td>
+								<td data-th="Aktion"><button type="submit" class="btn btn-primary pull-right">Filter anwenden</button></td>
 		                    </tr>
-			            </thead>
-			            <tbody>
 <?php
             $rs->data_seek(0);
             while($row = $rs->fetch_assoc()){
 ?>
 			                <tr>
-			                    <!--<td><?php echo $row['id'] ?></td>-->
-			                    <td><?php echo $row['frequency'] ?> Hz</td>
-			                    <td><?php echo $row['grade_of_dryness'] ?></td>
-			                    <td><?php echo $row['comment'] ?></td>
-			                    <td><?php echo $row['sensor_name'] ?></td>
-			                    <td><?php echo $row['created_at'] ?></td>
+			                    <!--<td data-th="ID" class="hidden-xs"><?php echo $row['id'] ?></td>-->
+			                    <td data-th="Frequenz" class="hidden-xs"><?php echo $row['frequency'] ?> Hz</td>
+			                    <td data-th="Grad der Trockenheit"><?php echo $row['grade_of_dryness'] ?></td>
+			                    <td data-th="Kommentar" class="hidden-xs"><?php echo $row['comment'] ?></td>
+			                    <td data-th="Sensor-Name"><?php echo $row['sensor_name'] ?></td>
+			                    <td data-th="am/um"><?php echo $row['created_at'] ?></td>
 			                </tr>
 <?php
             }

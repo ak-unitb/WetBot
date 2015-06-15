@@ -21,41 +21,45 @@
 <?php
 			} else {
 ?>
-		<h2>Aktive Sensoren</h2>
-        <div class="table-responsive">
-			<table class="table table-striped table-hover">
-				<thead>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Beschreibung</th>
-					<th>Sensor-Pin-Nummer</th>
-					<th>Relais-Pin-Nummer</th>
-					<th>Frequenz ab der der Sensor<br><i>zu trocken</i> meldet</th>
-					<th>Frequenz ab der der Sensor<br><i>zu nass</i> meldet</th>
-					<!--<th>Aktiv?</th>-->
-					<th></th>
-				</thead>
-				<tbody>
+		<div class="panel">
+        	<div class="table-responsive">
+	            <div class="panel-heading">
+	                <h2 class="panel-title">Aktive Sensoren</h2>
+	            </div>
+				<table class="table table-striped table-hover rwd-table">
+					<thead>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Beschreibung</th>
+						<th>Sensor-Pin-Nummer</th>
+						<th>Relais-Pin-Nummer</th>
+						<th>Frequenz ab der der Sensor<br><i>zu trocken</i> meldet</th>
+						<th>Frequenz ab der der Sensor<br><i>zu nass</i> meldet</th>
+						<!--<th>Aktiv?</th>-->
+						<th></th>
+					</thead>
+					<tbody>
 <?php
 	            $rs->data_seek(0);
 	            while ($row = $rs->fetch_assoc()) {
 ?>
-					<tr>
-						<td><?php echo $row['id'] ?></td>
-						<td><?php echo $row['name'] ?></td>
-						<td><?php echo $row['location_description'] ?></td>
-						<td><?php echo $row['sensor_pin_number'] ?></td>
-						<td><?php echo $row['relay_pin_number'] ?></td>
-						<td><?php echo $row['frequency_threeshold_too_dry'] ?> Hz</td>
-						<td><?php echo $row['frequency_threeshold_too_wet'] ?> Hz</td>
-						<!--<td><?php echo $row['active'] ? 'Ja' : 'Nein' ?></td>-->
-						<td><a href="edit.php?id=<?php echo $row['id'] ?>">Bearbeiten</a></td>
-					</tr>
+						<tr>
+							<td data-th="ID"><?php echo $row['id'] ?></td>
+							<td data-th="Name"><?php echo $row['name'] ?></td>
+							<td data-th="Beschreibung"><?php echo $row['location_description'] ?></td>
+							<td data-th="Sensor-Pin-Nummer"><?php echo $row['sensor_pin_number'] ?></td>
+							<td data-th="Ralais-Pin-Nummer"><?php echo $row['relay_pin_number'] ?></td>
+							<td data-th="zu trocken ab"><?php echo $row['frequency_threeshold_too_dry'] ?> Hz</td>
+							<td data-th="zu nass unter"><?php echo $row['frequency_threeshold_too_wet'] ?> Hz</td>
+							<!--<td data-th="Aktiv?"><?php echo $row['active'] ? 'Ja' : 'Nein' ?></td>-->
+							<td data-th="Aktion"><a href="edit.php?id=<?php echo $row['id'] ?>">Bearbeiten</a></td>
+						</tr>
 <?php
 	            }
 ?>
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			</div>
         </div>
 <?php
 			}
@@ -77,41 +81,45 @@
 <?php
 			} else {
 ?>
-		<h2>Inaktive Sensoren</h2>
-        <div class="table-responsive">
-			<table class="table table-striped table-hover">
-				<thead>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Beschreibung</th>
-					<th>Sensor-Pin-Nummer</th>
-					<th>Relais-Pin-Nummer</th>
-					<th>Frequenz ab der der Sensor<br><i>zu trocken</i> meldet</th>
-					<th>Frequenz ab der der Sensor<br><i>zu nass</i> meldet</th>
-					<th>Aktiv?</th>
-					<th></th>
-				</thead>
-				<tbody>
+		<div class="panel">
+        	<div class="table-responsive">
+	            <div class="panel-heading">
+	                <h2 class="panel-title">Inaktive Sensoren</h2>
+	            </div>
+				<table class="table table-striped table-hover rwd-table">
+					<thead>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Beschreibung</th>
+						<th>Sensor-Pin-Nummer</th>
+						<th>Relais-Pin-Nummer</th>
+						<th>Frequenz ab der der Sensor<br><i>zu trocken</i> meldet</th>
+						<th>Frequenz ab der der Sensor<br><i>zu nass</i> meldet</th>
+						<!--<th>Aktiv?</th>-->
+						<th>Aktion</th>
+					</thead>
+					<tbody>
 <?php
 	            $rs->data_seek(0);
 	            while ($row = $rs->fetch_assoc()) {
 ?>
-					<tr>
-						<td><?php echo $row['id'] ?></td>
-						<td><?php echo $row['name'] ?></td>
-						<td><?php echo $row['location_description'] ?></td>
-						<td><?php echo $row['sensor_pin_number'] ?></td>
-						<td><?php echo $row['relay_pin_number'] ?></td>
-						<td><?php echo $row['frequency_threeshold_too_dry'] ?> Hz</td>
-						<td><?php echo $row['frequency_threeshold_too_wet'] ?> Hz</td>
-						<td><?php echo $row['active'] ? 'Ja' : 'Nein' ?></td>
-						<td><a href="edit.php?id=<?php echo $row['id'] ?>">Bearbeiten</a></td>
-					</tr>
+						<tr>
+							<td data-th="ID"><?php echo $row['id'] ?></td>
+							<td data-th="Name"><?php echo $row['name'] ?></td>
+							<td data-th="Beschreibung"><?php echo $row['location_description'] ?></td>
+							<td data-th="Sensor-Pin-Nummer"><?php echo $row['sensor_pin_number'] ?></td>
+							<td data-th="Ralais-Pin-Nummer"><?php echo $row['relay_pin_number'] ?></td>
+							<td data-th="zu trocken ab"><?php echo $row['frequency_threeshold_too_dry'] ?> Hz</td>
+							<td data-th="zu nass unter"><?php echo $row['frequency_threeshold_too_wet'] ?> Hz</td>
+							<!--<td data-th="Aktiv?"><?php echo $row['active'] ? 'Ja' : 'Nein' ?></td>-->
+							<td data-th="Aktion"><a href="edit.php?id=<?php echo $row['id'] ?>">Bearbeiten</a></td>
+						</tr>
 <?php
 	            }
 ?>
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			</div>
         </div>
 <?php
 			}
