@@ -3,12 +3,12 @@
 ?>
 <?php include "incs/html_head.php" ?>
 
-          <h1>YunFreq - Current Value of Sensors</h1>
+          <h1>WetBot - Aktuelle Werte</h1>
 <?php
     if ($conn) {
 ?>
 <?php
-        $sqlSensors = "SELECT *  FROM `sensors`;";
+        $sqlSensors = 'SELECT *  FROM `sensors` WHERE `active` = TRUE;';
         $rsSensors = $conn->query($sqlSensors);
 
         if ($rsSensors === false) {
@@ -28,7 +28,7 @@
           <div class="sensor-data" data-id="<?php echo $rowSensors['id'] ?>" data-pin-number="<?php echo $rowSensors['pin_number'] ?>">
              <h2 class="sensor-data__name"><?php echo $rowSensors['name'] ?></h2>
              <p class="sensor-data__location-description">
-                 <?php echo $rowSensors['location_desciption'] ?>
+                 <?php echo $rowSensors['location_description'] ?>
              </p>
              <div
                class="sensor-data__status sensor-data__status--grade-of-dryness-<?php echo $rowSensorDatas['grade_of_dryness'] ?>"
@@ -50,7 +50,7 @@
 
     } else {
 ?>
-		<h3 class="has-error">Database connection failed</h3>
+		<p class="text-message has-error">Datenbank Verbindung fehlgeschlagen</p>
 <?php
     }
 ?>
