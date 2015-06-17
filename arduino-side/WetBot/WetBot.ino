@@ -15,8 +15,8 @@ basiert auf:
  Sensors Input auf Pin 12 / Arduino Yún
  Sensors VCC   auf Pin A0 - A6 / Arduino Yún
  
-Der Sketch verwendet 19.270 Bytes (67%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.179 Bytes (45%) des dynamischen Speichers, 1.381 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 23.722 Bytes (82%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.413 Bytes (55%) des dynamischen Speichers, 1.381 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -36,19 +36,23 @@ Copy me, I want to travel...
 #include <Process.h>
 #include "SaveSensorData.h"
 
-char currentComment[7] = "";
-
 // including Sensors -> checked per test!
 #include "Sensors.h"
 
+// include YùnAppi
+#include <YunServer.h>
+#include <YunClient.h>
+#include "YunApi.h"
+
+
+char currentComment[7] = "";
 Sensor SENSORs[2];
 Sensor activeSensor;
-
-
 
 //const long waitIntervallForRead = 86400000; // in millisecs // 24 * 60 * 60 * 1000 => one day
 //const long waitIntervallForRead = 3600000; // in millisecs // one hour per each sensor is best!! (cause: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
 const long waitIntervallForRead = 60000; // in millisecs // 1 * 60 * 1000 => one minute for changing the sensor ... for debugging
+
 
 
 
@@ -68,7 +72,7 @@ void setup() {
 
   Serial.println("***             YunFreq            *** ");
   Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("***  19.270 Bytes of 28.672 (67%)  *** ");
+  Serial.println("***  23.722 Bytes of 28.672 (82%)  *** ");
   Serial.println("");
 
   delay(200);
@@ -84,6 +88,12 @@ void setup() {
   Serial.print("will initialize the SENSORs");
   activeSensor = initSensors();
   Serial.println(" .... DONE!");
+
+  Serial.print("will initialize the YunAPI");
+  initYunServer();
+  // for testing the YunServer
+  pinMode(6, OUTPUT);
+  Serial.println(" .... DONE!");  
 
   Serial.print("Measuring starts for first sensor with id: ");
   Serial.println(activeSensor.id);
@@ -146,6 +156,8 @@ void loop() {
 
   // finally switch to the next sensor
   activeSensor = getNextSensor(activeSensor);
+  
+  listenApiRequests();
 
   delay(waitIntervallForRead);
 

@@ -16,7 +16,8 @@ SELECT
         AVG(last30.frequency) AS average_last30,
         AVG(last5.frequency) AS average_last5,
         (AVG(last30.frequency) - AVG(last5.frequency)) AS delta,
-        (AVG(last30.frequency) - AVG(last5.frequency)) < 0 AS getting_dryer
+        (AVG(last30.frequency) - AVG(last5.frequency)) < 0 AS getting_dryer,
+        (AVG(last30.frequency) - AVG(last5.frequency)) > 0 AS getting_wetter
 FROM (
         SELECT
                 frequency
