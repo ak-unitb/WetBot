@@ -8821,9 +8821,11 @@ section {
   display: none;
   font-size: 40px;
   font-weight: bold;
+  float: left;
   text-align: center;
   margin: 0;
   padding: 0;
+  width: 60%;
 }
 .sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-0 .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness--0 {
   display: block;
@@ -8843,16 +8845,41 @@ section {
 .sensor-data .sensor-data__status .sensor-data__status__frequency {
   color: white;
   display: block;
-  text-align: center;
+  float: left;
   height: auto;
   margin: 0;
+  text-align: center;
+  width: 60%;
 }
 .sensor-data .sensor-data__status .sensor-data__status__comment {
   color: white;
   display: block;
-  text-align: center;
+  float: left;
   height: auto;
   margin: 0;
+  text-align: center;
+  width: 60%;
+}
+.sensor-data .sensor-data__status .sensor-data__status__trend {
+  color: #ccc;
+  display: block;
+  float: right;
+  font-size: 4.2em;
+  font-weight: bold;
+  height: auto;
+  margin: 0;
+  padding-top: 0.2em;
+  text-align: center;
+  width: 30%;
+}
+.sensor-data .sensor-data__status .sensor-data__status__trend.sensor-data__status__trend--gettingdryer {
+  color: #f00;
+}
+.sensor-data .sensor-data__status .sensor-data__status__trend.sensor-data__status__trend--gettingwetter {
+  color: #0f0;
+}
+.sensor-data .sensor-data__status .sensor-data__status__trend.sensor-data__status__trend--constant {
+  color: #ccc;
 }
 
 p.text-message {
@@ -8867,4 +8894,121 @@ p.text-message {
   .table-responsive {
     border: 1px solid transparent;
   }
+  .table-responsive > .table.rwd-table > tbody > tr > td,
+  .table-responsive > form >.table.rwd-table > tbody > tr > td {
+    white-space: normal;
+    padding: .25em .5em .25em 11.5em;
+  }
+  .table-responsive > .table.rwd-table > tbody > tr > td:before {
+    white-space: nowrap;
+  }
 }
+
+
+/**
+ * inspired by
+ *    http://codepen.io/geoffyuen/pen/FCBEg:
+ *  slightly modified
+ * 
+ * using mobile first method (IE8,7 requires respond.js polyfill
+ * https://github.com/scottjehl/Respond)
+ * 
+ */
+/* line 15, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table {
+  margin: 1em 0;
+  min-width: 280px;
+  width: 100%;
+}
+/* line 20, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table tr {
+  border-top: 1em solid transparent;
+  border-bottom: 1em solid transparent;
+}
+@media (min-width: 767px) {
+  /* line 20, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+  .rwd-table tr {
+    border-top: 0.25em solid transparent;
+    border-bottom: 0.25em solid transparent;
+  }
+}
+/* line 29, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table th {
+  display: none;
+}
+/* line 33, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table td {
+  display: block;
+}
+/* line 36, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table td:first-child {
+  padding-top: .5em;
+}
+/* line 39, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table td:last-child {
+  padding-bottom: .5em;
+}
+/* line 43, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table td:before {
+  content: attr(data-th) ": ";
+  font-weight: bold;
+  width: 10.5em;
+  display: inline-block;
+  text-align: right;
+  padding-right: 1em;
+  margin-left: -10.5em;
+}
+@media (min-width: 767px) {
+  /* line 43, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+  .rwd-table td:before {
+    display: none;
+  }
+}
+/* line 60, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table th,
+.rwd-table td {
+  text-align: left;
+  margin: .5em .2em;
+  border-color: #eee;
+  padding: .25em;
+}
+
+@media (min-width: 767px) {
+  /* line 60, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+  .rwd-table th, .rwd-table td {
+    display: table-cell;
+    padding: .25em;
+  }
+  /* line 67, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+  .rwd-table th:first-child, .rwd-table td:first-child {
+    /*padding-left: 0;*/
+  }
+  /* line 71, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+  .rwd-table th:last-child, .rwd-table td:last-child {
+    /*padding-right: 0;*/
+  }
+}
+
+/* line 84, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table {
+  /*background: #d3d3d3;*/
+  color: inherit;
+  overflow: hidden;
+  border-color: transparent;
+}
+/* line 89, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table tr {
+  /*border-color: #eee;*/
+  /* transparent lighten(#34495E, 10%);*/
+}
+
+/* line 100, /var/www/CompassWebapp/app/assets/stylesheets/responsive-table.css.scss */
+.rwd-table th, .rwd-table td:before {
+  color: inherit;
+}
+
+.panel-heading h1, .panel-heading h2, .panel-heading h3, .panel-heading h4, .panel-heading h5, .panel-heading h6,
+.panel-heading .h1, .panel-heading .h2, .panel-heading .h3, .panel-heading .h4, .panel-heading .h5, .panel-heading .h6 {
+  font-weight: bold;
+}
+

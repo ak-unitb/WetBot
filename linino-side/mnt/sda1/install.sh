@@ -25,6 +25,9 @@
 ### install php5
 
 opkg update
+opkg install zoneinfo-core zoneinfo-europe
+
+opkg update
 opkg install php5 php5-cgi
 
 uci add_list uhttpd.main.interpreter=".php=/usr/bin/php-cgi"
