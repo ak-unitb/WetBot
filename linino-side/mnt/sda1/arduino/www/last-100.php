@@ -25,7 +25,7 @@
 		} else {
 			$sql .= " WHERE `sd`.`sensor_id` = `s`.`id`";
 		}
-		$sql .= " ORDER BY `sd`.`created_at` DESC LIMIT 100";
+		$sql .= " ORDER BY `sd`.`created_at` DESC LIMIT 720";
 
         $rs = $conn->query($sql);
         if ($rs === false) {

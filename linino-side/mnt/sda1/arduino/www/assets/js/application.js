@@ -13950,3 +13950,124 @@ $(document).ready(function(){
 });
 
 
+var drawChartForSensor = function ($container, sensorTitle, fromToDateTime, thresholdTooWet, thresholdTooDry, data) {
+
+	Highcharts.setOptions({
+		global: {
+			useUTC: false
+		}
+	});
+
+	$container.highcharts({
+		chart: {
+			type: 'spline'
+		},
+		title: {
+			text: 'Daten des Sensors ' + sensorTitle
+		},
+		subtitle: {
+			text: 'Zeitraum: ' + fromToDateTime
+		},
+		xAxis: {
+			type: 'datetime',
+			labels: {
+				overflow: 'justify'
+			}
+		},
+		yAxis: {
+			title: {
+				text: 'Frequenz (Hz)'
+			},
+			min: 0,
+			max: 40000,
+			minorGridLineWidth: 0,
+			gridLineWidth: 0,
+			alternateGridColor: null,
+			// thresholdTooDry = 29629 ; thresholdTooWet = 17000
+			plotBands: [{ // tooWet
+				from: 0,
+				to: thresholdTooWet,
+				color: 'rgba(0, 255, 255, 0.5)', // 'rgba(68, 170, 213, 0.5)',
+				label: {
+					text: 'zu nass',
+					style: {
+						color: '#606060'
+					},
+					align: "left",
+					verticalAlign: "middle"
+				}
+			}, { // wet
+				from: thresholdTooWet,
+				to: thresholdTooDry,
+				color: 'rgba(0, 255, 0, 0.5)', // 'rgba(0, 0, 0, 0.1)',
+				label: {
+					text: 'feucht',
+					style: {
+						color: '#606060'
+					},
+					align: "left",
+					verticalAlign: "middle"
+				}
+			}, { // tooDry
+				from: thresholdTooDry,
+				to: 40000,
+				color: 'rgba(255, 0, 0, 0.5)', //'rgba(68, 170, 213, 0.1)',
+				label: {
+					text: 'trocken',
+					style: {
+						color: '#606060'
+					},
+					align: "leftEdgeOffset",
+					verticalAlign: "middle"
+				}
+			}]
+		},
+		tooltip: {
+			valueSuffix: ' Hz'
+		},
+		plotOptions: {
+			spline: {
+				lineWidth: 2,
+				allowPointSelect: true,
+				states: {
+					hover: {
+						lineWidth: 2
+					}
+				},
+				marker: {
+					enabled: false
+				}
+			},
+			cropThreshold: 800
+		},
+		series: [
+			{
+				name: sensorTitle,
+				data: data
+			}
+		],
+		navigation: {
+			menuItemStyle: {
+				fontSize: '10px'
+			}
+		}
+	});
+};
+
+// highcharts:
+$(function () {
+
+	$('#statisticsGraphSensorId').on('change', function () {this.form.submit();});
+
+	$container = $('#highsharts_container');
+
+	if ($container.length > 0 && $container.hasClass('highsharts') && $container.hasClass('sensor')) {
+
+		$.getJSON('/sd/sensors/statistic.json.php?sensor_id=' + $container.data('sensor-id') + "&" + (new Date()).getTime(), function (json) {
+			json.data.reverse();
+			drawChartForSensor($container, json.sensor_name, json.fromToDatetime[0].date + " bis " + json.fromToDatetime[1].date, json.thresholdTooWet, json.thresholdTooDry, json.data);
+		});
+	}
+
+});
+

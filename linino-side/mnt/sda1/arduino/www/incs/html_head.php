@@ -5,6 +5,7 @@
     <meta name="description" content="WetBot - automatisches Bewässerungssystem auf Basis des ArduinoYùn">
     <link rel="stylesheet" media="all" href="/sd/assets/css/application.css">
     <script src="/sd/assets/js/application.js"></script>
+    <script src="/sd/assets/js/highcharts.js"></script>
   </head>
   <body>
     <header>
@@ -23,6 +24,7 @@
             <ul class="nav navbar-nav">
               <li><a href="/sd/sensors/">Sensoren</a></li>
               <li><a href="/sd/last-100.php">Sensor-Daten</a></li>
+              <li><a href="/sd/statistic-graphs.php">Sensoren graphisch</a></li>
               <li><a href="/cgi-bin/luci/webpanel/homepage">Yun-Admin</a></li>
             </ul>
           </div>
