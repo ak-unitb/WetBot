@@ -57,7 +57,7 @@ void digitalCommand(YunClient client) {
     client.println(value);
   } else {
     //Serial.print("digitalCommand: Read: pin: ");
-    //Serial.print(pin);
+    //Serial.println(pin);
     value = digitalRead(pin);
     client.println(value);
   }
