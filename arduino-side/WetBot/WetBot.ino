@@ -1,7 +1,7 @@
 /*
 YunFreq by count0 (Mr. Software) and Taquma (Mr. Hardware)
-06. Juni 2015
-Letzte Änderung: 10. Juni 2015 by tq
+19. Juni 2015
+Last change: 19. Juni 2015 by count0
 
 basiert auf:
  
@@ -12,10 +12,11 @@ basiert auf:
  *
  * This example code is in the public domain.
 
- Sensors Input auf Pin 12 / Arduino Yún
- Sensors VCC   auf Pin A0 - A6 / Arduino Yún
+ Sensors Input on Pin 12      / Arduino Yún
+ Sensors VCC   on Pin A0 - A6 / Arduino Yún
+ Valves VCC    on Pin 4 - 9   / Arduino Yún
  
-Der Sketch verwendet 23.536 Bytes (82%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Der Sketch verwendet 23.528 Bytes (82%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
 Globale Variablen verwenden 1.295 Bytes (50%) des dynamischen Speichers, 1.381 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
@@ -39,20 +40,22 @@ Copy me, I want to travel...
 // including Sensors -> checked per test!
 #include "Sensors.h"
 
-// include YùnAppi
+// include YùnAppi -> checked
 #include <YunServer.h>
 #include <YunClient.h>
 #include "YunApi.h"
 
-
+// variables for saving sensor data
 char currentComment[7] = "";
+
+// variables for sensors
 Sensor SENSORs[2];
 Sensor activeSensor;
 
+// variables for loop control
 //const long waitIntervallForRead = 86400000; // in millisecs // 24 * 60 * 60 * 1000 => one day
 //const long waitIntervallForRead = 3600000; // in millisecs // one hour per each sensor is best!! (cause: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
 const long waitIntervallForRead = 60000; // in millisecs // 1 * 60 * 1000 => one minute for changing the sensor ... for debugging
-
 unsigned long previousMillis = 0;        // will store last time millies were updated
 
 
@@ -72,7 +75,7 @@ void setup() {
 
   Serial.println("***            WetBot              *** ");
   Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("*** 23.536 Bytes (82%) from 28.672 *** "); 
+  Serial.println("*** 23.528 Bytes (82%) from 28.672 *** "); 
   Serial.println("");
 
   delay(200);
