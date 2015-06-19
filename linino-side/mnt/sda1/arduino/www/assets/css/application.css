@@ -8881,6 +8881,23 @@ section {
 .sensor-data .sensor-data__status .sensor-data__status__trend.sensor-data__status__trend--constant {
   color: #ccc;
 }
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.sensor-data .sensor-data__watering-button .glyphicon {
+  visibility: hidden;
+}
+.sensor-data .sensor-data__watering-button.off .glyphicon {
+  color: red;
+  visibility: visible;
+}
+.sensor-data .sensor-data__watering-button.on .glyphicon {
+  animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+  color: green;
+  visibility: visible;
+}
+
 
 p.text-message {
   padding: 1em;
