@@ -13,12 +13,10 @@ void initYunServer() {
 }
 
 void listenApiRequests() {
-  Serial.println("listenforApiRequest");
   YunClient client = server.accept();
 
   // There is a new client?
   if (client) {
-    Serial.println("Got ApiRequest!");
     // Process request
     processApiRequest(client);
 
@@ -34,7 +32,6 @@ void processApiRequest(YunClient client) {
 
   // is "digital" command?
   if (command == "digital") {
-    Serial.println("proseccsing digital command");
     digitalCommand(client);
   }
 }
@@ -49,22 +46,22 @@ void digitalCommand(YunClient client) {
   // with a value like: "/digital/13/1"
   if (client.read() == '/') {
     value = client.parseInt();
-    Serial.print("digitalCommand: Write: pin: ");
-    Serial.print(pin);
-    Serial.print(" value: ");
-    Serial.println(value);
+    //Serial.print("digitalCommand: Write: pin: ");
+    //Serial.print(pin);
+    //Serial.print(" value: ");
+    //Serial.println(value);
     digitalWrite(pin, value);
+    // Send feedback to client
+    client.print(pin);
+    client.print(" set to ");
+    client.println(value);
   } else {
-    Serial.print("digitalCommand: Read: pin: ");
-    Serial.print(pin);
+    //Serial.print("digitalCommand: Read: pin: ");
+    //Serial.print(pin);
     value = digitalRead(pin);
+    client.println(value);
   }
 
-  // Send feedback to client
-  client.print(F("Pin D"));
-  client.print(pin);
-  client.print(F(" set to "));
-  client.println(value);
 
   // Update datastore key with the current pin value
   String key = "D";
