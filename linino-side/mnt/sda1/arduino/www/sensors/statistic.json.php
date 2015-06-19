@@ -58,8 +58,8 @@
 					echo '],';
 					echo
 						'"fromToDatetime": [
-							{ "timestamp": ' . strtotime($fromToDatetime) . ', "date": "' . $fromToDatetime . '"},
-							{ "timestamp": '. strtotime($toDateTime) . ',  "date": "' . $toDateTime . '"}
+							{ "timestamp": '. strtotime($toDateTime) . ',  "date": "' . $toDateTime . '"},
+							{ "timestamp": ' . strtotime($fromToDatetime) . ', "date": "' . $fromToDatetime . '"}
 						]
 					}';
 #							{ "timestamp": ' . strtotime($fromToDatetime) . ', "date": "' . strftime('%d.%m.%Y %H:%M:%S', $fromToDatetime) . '"},

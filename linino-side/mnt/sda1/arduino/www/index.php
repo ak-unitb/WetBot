@@ -35,7 +35,7 @@
 ?>
         <div class="sensor-data" data-id="<?php echo $rowSensors['id'] ?>" data-pin-number="<?php echo $rowSensors['pin_number'] ?>">
             <ul class="list-inline pull-right">
-				<li><a href="#" class="sensor-data__watering-button xhr-call" data-url="/arduino/digital/<?php echo $rowSensors['relay_pin_number'] ?>" title="Bewässern?"><span class="glyphicon glyphicon-tint"></span></a></li>
+				<li><a href="#" class="sensor-data__watering-button xhr-call" data-url="/arduino/digital/<?php echo $rowSensors['relay_pin_number'] ?>" title=""><span class="glyphicon glyphicon-tint"></span></a></li>
 			</ul>
             <h2 class="sensor-data__name"><?php echo $rowSensors['name'] ?></h2>
             <p class="sensor-data__location-description">
