@@ -5,9 +5,7 @@
  *   - the file insertSensorData.php on a sd-card located @ /mnt/sda1/arduino/
  */
 
-void initSaveSensorData() {
-  Bridge.begin();  // Initialize the Bridge (implemtation just step out, if Bridge is already started)  
-}
+void initSaveSensorData() {}
 
 bool insertSensorDataByPhpCli(long frequency, int gradeOfDryness, char* comment, int sensorNumber) {
 
@@ -35,6 +33,8 @@ bool insertSensorDataByPhpCli(long frequency, int gradeOfDryness, char* comment,
       charBuf[i] = c;
       i += 1;
     }
+    p.flush();
+    p.close();
     // if script returned any error...
     if (strcmp(charBuf, "SUCCESS") != 0) {
       return false;
