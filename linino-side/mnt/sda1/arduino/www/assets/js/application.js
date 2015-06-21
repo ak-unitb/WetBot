@@ -14072,53 +14072,67 @@ $(function () {
 });
 // pin status 
 $(function () {
+	var synchronizeRelaisPinBtn = function ($this, dataUrl) {
+		$.get(
+			dataUrl + '?' + (new Date()).getTime(),
+			function (xhrData, xhrStatus, $xhr) {
+				if (xhrStatus == "success") {
+					$this.removeClass('on').removeClass('off');
+					xhrData = xhrData.substring(0,1);
+					if (xhrData == "0") {
+						//console.log(dataUrl, "switching to off");
+						$this.addClass('off');
+						$this.attr('title', "Wasser marsch?");
+					} else if (xhrData == "1") {
+						//console.log(dataUrl, "switching to on");
+						$this.addClass('on');
+						$this.attr('title', "Wasser halt?");
+					}
+				}
+			}
+		);
+	};
+	var relaiPinButtonClickhandler = function ($this, dataUrl) {
+		$this.on(
+			'click',
+			function (evnt) {
+				evnt.preventDefault();
+				evnt.stopPropagation();
+				var actionUrl = dataUrl + "/",
+					targetSuccessClass = "",
+					titleText = "";
+				if ($this.hasClass('off')) {
+					actionUrl = actionUrl + '1';
+					targetSuccessClass = 'on';
+					titleText = "Wasser halt?"
+				} else if ($this.hasClass('on')) {
+					actionUrl = actionUrl + '0';
+					targetSuccessClass = 'off';
+					titleText = "Wasser marsch?";
+				}
+				$.get(
+					actionUrl + "?" + (new Date()).getTime(),
+					function (data, xhrStatus, $xhr) {
+						$this.removeClass("on").removeClass("off");
+						if (xhrStatus == "success") {
+							$this.addClass(targetSuccessClass);
+							$this.attr('title', titleText);
+						}
+					}
+				);
+			}
+		);
+	}
 	$('.xhr-call').each(
+
 		function () {
 			var $this = $(this),
 				dataUrl = $this.data('url');
 			//console.log('anchor: ', this, ' dataUrl: ', dataUrl);
-			$.get(
-				dataUrl + '?' + (new Date()).getTime(),
-				function (xhrData, xhrStatus, $xhr) {
-					if (xhrStatus == "success") {
-						console.dir(xhrData);
-						xhrData = xhrData.substring(0,1);
-						console.dir(xhrData);
-						if (xhrData == "0") {
-							console.log("switching to off");
-							$this.addClass('off');
-							$this.attr('title', "Wasser marsch?");
-						} else if (xhrData == "1") {
-							console.log("switching to on");
-							$this.addClass('on');
-							$this.attr('title', "Wasser halt?");
-						}
-					}
-				}
-			);
-			$this.on(
-				'click',
-				function () {
-					var actionUrl = dataUrl + '/',
-						targetSuccessClass = '';
-					if ($this.hasClass('off')) {
-						actionUrl = actionUrl + '1';
-						targetSuccessClass = 'on';
-					} else if ($this.hasClass('on')) {
-						actionUrl = actionUrl + '0';
-						targetSuccessClass = 'off';
-					}
-					$.get(
-						actionUrl + '?' + (new Date()).getTime(),
-						function (data, xhrStatus, $xhr) {
-							$this.removeClass('on').removeClass('off');
-							if (xhrStatus == "success") {
-								$this.addClass(targetSuccessClass);
-							}
-						}
-					);
-				}
-			);
+			synchronizeRelaisPinBtn($this, dataUrl);
+			relaiPinButtonClickhandler($this, dataUrl);
+			
+			window.setInterval(function () { synchronizeRelaisPinBtn($this, dataUrl); }, 600000);
 		}
 	);
 });
