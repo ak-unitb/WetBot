@@ -1,7 +1,7 @@
 /*
-YunFreq by count0 (Mr. Software) and Taquma (Mr. Hardware)
-19. Juni 2015
-Last change: 19. Juni 2015 by count0
+WetBot by count0 (Mr. Software) and Taquma (Mr. Hardware)
+
+Last change: 21. Juni 2015 by count0
 
 basiert auf:
  
@@ -12,12 +12,12 @@ basiert auf:
  *
  * This example code is in the public domain.
 
- Sensors Input on Pin 12      / Arduino Yún
- Sensors VCC   on Pin A0 - A6 / Arduino Yún
- Valves VCC    on Pin 4 - 9   / Arduino Yún
+Sensors Input on Pin 12      / Arduino Yún
+Sensors VCC   on Pin A0 - A6 / Arduino Yún
+Valves VCC    on Pin 4 - 9   / Arduino Yún
  
-Der Sketch verwendet 26.412 Bytes (92%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.740 Bytes (67%) des dynamischen Speichers, 820 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 25.112 Bytes (87%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.722 Bytes (67%) des dynamischen Speichers, 838 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -34,31 +34,32 @@ Copy me, I want to travel...
 #include "YunTimeSync.h"
 
 // includes for SaveSensorData.ino -> checked per test!
-#include <Process.h>
+//#include <Process.h> // already included...
 #include "SaveSensorData.h"
 
 // including Sensors -> checked per test!
 #include "Sensors.h"
 
 // include for sensosr config by CSV
-#include <FileIO.h>
+//#include <Process.h> // already included...
 #include "InitSensorsByCsv.h"
 
-// include YùnAppi -> checked
+// include YùnApi -> checked
 #include <YunServer.h>
 #include <YunClient.h>
 #include "YunApi.h"
 
-// variables for saving sensor data
+// variable for saving sensor data
 char currentComment[7] = "";
 
-// variables for sensors
+Sensor SENSORs[6]; // keep this variable in sync with the one in Sensors.h
 Sensor activeSensor;
 
 // variables for loop control
 //const long waitIntervallForRead = 86400000; // in millisecs // 24 * 60 * 60 * 1000 => one day
-//const long waitIntervallForRead = 3600000; // in millisecs // one hour per each sensor is best!! (cause: 60 is dividable by 6, 5, 4 , 3, 2 and 1 - so each acessible count of sensors... - AND: a quite reasanable interval for real life measurments... ;) )
+//const long waitIntervallForRead = 600000; // in millisecs // ten minutes ist best. Any sensor is triggend once in an hour
 const long waitIntervallForRead = 60000; // in millisecs // 1 * 60 * 1000 => one minute for changing the sensor ... for debugging
+
 unsigned long previousMillis = 0;        // will store last time millies were updated
 
 
@@ -72,14 +73,15 @@ void setup() {
     // wait for serial port to connect.
     digitalWrite(13, HIGH);
   }
-  Serial.println("Serial is available.");
-  Serial.println(" ");
   digitalWrite(13, LOW); // Serial now is available, switching off the led
 
   Serial.println("***            WetBot              *** ");
   Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("*** 26.412 Bytes (92%) from 28.672 *** ");
+  Serial.println("*** 25.112 Bytes (87%) from 28.672 *** ");
   Serial.println("");
+
+  // setup Brigde for InitSensorsByCSV, SaveSensorData and YùnTimeSync
+  Bridge.begin();
 
   delay(200);
 
@@ -116,6 +118,9 @@ void loop() {
 
     previousMillis = currentMillis;   
 
+    Serial.print("current free RAM (1): ");
+    Serial.println(getFreeRam());
+
     if (FreqCount.available()) {
   
       activeSensor.setGradeOfDrynessByFrequency(FreqCount.read());
@@ -128,8 +133,6 @@ void loop() {
       Serial.print(activeSensor.gradeOfDryness);
       Serial.print(" @ ");
       Serial.println(digitalClockDisplay());
-      Serial.print("current free RAM: ");
-      Serial.println(getFreeRam());
     }
   
     // case of ERROR!:
@@ -168,12 +171,21 @@ void loop() {
 
     // finally switch to the next sensor
     activeSensor = getNextSensor(activeSensor);
-    delay(700);
+
+    delay(200);
+
+    Serial.print("current free RAM (2): ");
+    Serial.println(getFreeRam());
   }
 
   listenApiRequests();
 
-  delay(200);
+  delay(1000);
 
 } // end void loop
 
+int getFreeRam () {
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
