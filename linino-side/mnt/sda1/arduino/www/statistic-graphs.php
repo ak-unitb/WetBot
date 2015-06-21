@@ -1,8 +1,9 @@
 <?php
 	require_once('incs/db.php');
 ?>
-<?php include "incs/html_head.php" ?>
-
+<?php
+	include "incs/html_head.php"
+?>
 		<h1>Statistik</h1>
 <?php
 	if ($conn) {
@@ -19,10 +20,9 @@
 			<label for="name">Sensor</label>
 			<select class="form-control" name="sensor_id" id="statisticsGraphSensorId">
 <?php
+			$currentSensorId = $_GET['sensor_id'];
 			if (empty($_GET['sensor_id'])) {
 				$currentSensorId = 1;
-			} else {
-				$currentSensorId = $_GET['sensor_id'];
 			}
 			$rsSensors->data_seek(0);
 			while ($rowSensors = $rsSensors->fetch_assoc()) {
@@ -34,8 +34,8 @@
 			</select>
 		</div>
 	</form>
-	<div id="highsharts_container" class="highsharts sensor" data-sensor-id="<?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] ? $_GET['sensor_id'] : '1'; ?>">
-	
+	<div id="highcharts_container_<?php echo $currentSensorId; ?>" class="highcharts sensor" data-sensor-id="<?php echo $currentSensorId; ?>">
+		<span class="highcharts__wait"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Lade...</span>
 	</div>
 <?php
 		}

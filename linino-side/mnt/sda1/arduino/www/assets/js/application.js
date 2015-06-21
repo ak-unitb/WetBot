@@ -14059,9 +14059,9 @@ $(function () {
 
 	$('#statisticsGraphSensorId').on('change', function () {this.form.submit();});
 
-	$container = $('#highsharts_container');
+	$container = $('.highcharts.sensor').first();
 
-	if ($container.length > 0 && $container.hasClass('highsharts') && $container.hasClass('sensor')) {
+	if ($container.length > 0 && $container.hasClass('highcharts') && $container.hasClass('sensor')) {
 
 		$.getJSON('/sd/sensors/statistic.json.php?sensor_id=' + $container.data('sensor-id') + "&" + (new Date()).getTime(), function (json) {
 			json.data.reverse();
