@@ -59,6 +59,10 @@ Sensor initSensorsByCsv () {
         } else { // need to be linefoot
           Sensor sensor ((id - 1), (uint32_t)(frequencyThresholdTooWet), (uint32_t)(frequencyThresholdTooDry), isActive);
           SENSORs[lineCounter] = sensor;
+          // initialize the pin of the sensor
+          pinMode(SENSORs[lineCounter].sensorPinNumber, OUTPUT);
+          // initialize the pin of the relay
+          pinMode(SENSORs[lineCounter].relayPinNumber, OUTPUT);
           printSensor(SENSORs[lineCounter]);
           lineCounter++;
           partsCounter = 0;

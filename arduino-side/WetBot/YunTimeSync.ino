@@ -57,7 +57,7 @@ time_t requestTimeSyncFromYunSide() {
 /*
  * Currently just used for development and debugging purposes...
  *   probably must not be used in productive environment... String can be quite costly!
- * /
+ */
 //---- utility functions for time formatting
 
 // display of the time

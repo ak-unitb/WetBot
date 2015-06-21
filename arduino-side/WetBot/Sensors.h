@@ -26,7 +26,7 @@ Sensor initSensors();
 
 Sensor getNextSensor(Sensor sensor);
 
-extern Sensor SENSORs[2];
+extern Sensor SENSORs[6];
 
 #endif
 

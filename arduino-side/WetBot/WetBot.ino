@@ -16,8 +16,8 @@ basiert auf:
  Sensors VCC   on Pin A0 - A6 / Arduino Yún
  Valves VCC    on Pin 4 - 9   / Arduino Yún
  
-Der Sketch verwendet 24.896 Bytes (86%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.697 Bytes (66%) des dynamischen Speichers, 863 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 26.412 Bytes (92%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.740 Bytes (67%) des dynamischen Speichers, 820 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -78,7 +78,7 @@ void setup() {
 
   Serial.println("***            WetBot              *** ");
   Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("*** 24.896 Bytes (86%) from 28.672 *** "); 
+  Serial.println("*** 26.412 Bytes (92%) from 28.672 *** ");
   Serial.println("");
 
   delay(200);
@@ -125,9 +125,9 @@ void loop() {
       Serial.print(" -> frequency: ");
       Serial.print(activeSensor.frequency);
       Serial.print(" Hz => gradeOfDryness: ");
-      Serial.println(activeSensor.gradeOfDryness);
-      //Serial.print(" @ ");
-      //Serial.println(digitalClockDisplay());
+      Serial.print(activeSensor.gradeOfDryness);
+      Serial.print(" @ ");
+      Serial.println(digitalClockDisplay());
       Serial.print("current free RAM: ");
       Serial.println(getFreeRam());
     }
@@ -149,13 +149,14 @@ void loop() {
           Serial.print("Change: Start watering for sensor.id: ");
           Serial.println(activeSensor.id);
           digitalWrite(activeSensor.relayPinNumber, HIGH);
+          strcpy(currentComment, "change2tooDry");
         } else if (activeSensor.gradeOfDryness <= 1 ) { // it gets too wet
           Serial.println();
           Serial.print("Change Stop watering for sensor.id: ");
           Serial.println(activeSensor.id);
           digitalWrite(activeSensor.relayPinNumber, LOW);
+          strcpy(currentComment, "change");
         }
-        strcpy(currentComment, "change");
       }
     }
 

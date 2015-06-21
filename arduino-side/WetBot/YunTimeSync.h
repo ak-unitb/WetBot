@@ -8,7 +8,7 @@ void initAndSyncTime();
 
 /*
  * Currently just used for development and debugging purposes...
- * /
+ */
 String digitalClockDisplay();
 String toDigits(int digits, bool colon);
 /* */
