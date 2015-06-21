@@ -16,8 +16,8 @@ basiert auf:
  Sensors VCC   on Pin A0 - A6 / Arduino Yún
  Valves VCC    on Pin 4 - 9   / Arduino Yún
  
-Der Sketch verwendet 23.528 Bytes (82%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.295 Bytes (50%) des dynamischen Speichers, 1.381 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 24.896 Bytes (86%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 1.697 Bytes (66%) des dynamischen Speichers, 863 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -40,6 +40,10 @@ Copy me, I want to travel...
 // including Sensors -> checked per test!
 #include "Sensors.h"
 
+// include for sensosr config by CSV
+#include <FileIO.h>
+#include "InitSensorsByCsv.h"
+
 // include YùnAppi -> checked
 #include <YunServer.h>
 #include <YunClient.h>
@@ -49,7 +53,6 @@ Copy me, I want to travel...
 char currentComment[7] = "";
 
 // variables for sensors
-Sensor SENSORs[2];
 Sensor activeSensor;
 
 // variables for loop control
@@ -75,7 +78,7 @@ void setup() {
 
   Serial.println("***            WetBot              *** ");
   Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("*** 23.528 Bytes (82%) from 28.672 *** "); 
+  Serial.println("*** 24.896 Bytes (86%) from 28.672 *** "); 
   Serial.println("");
 
   delay(200);
@@ -88,8 +91,8 @@ void setup() {
   initSaveSensorData();
   Serial.println(" .... DONE!");
 
-  Serial.print("will initialize the SENSORs");
-  activeSensor = initSensors();
+  Serial.println("will initialize the SENSORs");
+  activeSensor = initSensorsByCsv();
   Serial.println(" .... DONE!");
 
   Serial.print("will initialize the YunAPI");
@@ -122,9 +125,11 @@ void loop() {
       Serial.print(" -> frequency: ");
       Serial.print(activeSensor.frequency);
       Serial.print(" Hz => gradeOfDryness: ");
-      Serial.print(activeSensor.gradeOfDryness);
-      Serial.print(" @ ");
-      Serial.println(digitalClockDisplay());
+      Serial.println(activeSensor.gradeOfDryness);
+      //Serial.print(" @ ");
+      //Serial.println(digitalClockDisplay());
+      Serial.print("current free RAM: ");
+      Serial.println(getFreeRam());
     }
   
     // case of ERROR!:
@@ -162,11 +167,12 @@ void loop() {
 
     // finally switch to the next sensor
     activeSensor = getNextSensor(activeSensor);
+    delay(700);
   }
 
   listenApiRequests();
 
-  delay(1000);
+  delay(200);
 
 } // end void loop
 

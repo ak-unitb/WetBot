@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "Sensors.h"
 
-Sensor::Sensor (int pId, uint32_t pfrequencyThresholdTooDry, uint32_t pfrequencyThresholdTooWet) {
+Sensor::Sensor (int pId, uint32_t pfrequencyThresholdTooDry, uint32_t pfrequencyThresholdTooWet, bool pIsActive = false) {
   id = pId;
   sensorPinNumber = (A0 + pId); // using analog pins A0 to A5
   relayPinNumber = (4 + pId); // using digital pins from 4 to 9
@@ -11,6 +11,7 @@ Sensor::Sensor (int pId, uint32_t pfrequencyThresholdTooDry, uint32_t pfrequency
   previousGradeOfDryness = 1;
   frequencyThresholdTooDry = pfrequencyThresholdTooDry;
   frequencyThresholdTooWet = pfrequencyThresholdTooWet;
+  isActive = pIsActive;
 }
 
 void Sensor::setGradeOfDrynessByFrequency(uint32_t pFrequency) {
@@ -42,12 +43,12 @@ const char* Sensor::getGradeOfDrynessLiterally() {
 bool Sensor::justChangedGradeOfDryness() {
   return previousGradeOfDryness != gradeOfDryness;
 }
-
+/*
 Sensor initSensors() {
   for (int i = 0; i < 2; i++) {
     // initialize the sensor struct
 
-    Sensor sensor (i, (uint32_t)(29629), (uint32_t)(17000));
+    Sensor sensor (i, (uint32_t)(29629), (uint32_t)(17000), true);
 
     SENSORs[i] = sensor;
 
@@ -61,7 +62,7 @@ Sensor initSensors() {
   digitalWrite(SENSORs[0].sensorPinNumber, HIGH);
   return SENSORs[0];
 }
-
+*/
 Sensor getNextSensor(Sensor sensor) {
 
   // power off the current sensor
@@ -75,6 +76,10 @@ Sensor getNextSensor(Sensor sensor) {
     nextSensor = SENSORs[0];
   } else {
     nextSensor =  SENSORs[(1 + sensor.id)];
+  }
+  
+  if (!nextSensor.isActive) { // @TODO: if no active sensor is configured this is an endless recursion!!!!
+    nextSensor = getNextSensor(nextSensor);
   }
 
   // power on the next sensor

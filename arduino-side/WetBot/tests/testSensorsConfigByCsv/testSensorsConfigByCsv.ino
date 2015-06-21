@@ -1,5 +1,5 @@
 /**
- * Test for retrieving the Sensors-Config via an JSON file delivered by
+ * Test for retrieving the Sensors-Config via an CSV file delivered by
  * the linino-side of this ArduinoYún
  */
 

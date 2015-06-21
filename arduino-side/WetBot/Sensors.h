@@ -13,9 +13,10 @@ class Sensor {
     int previousGradeOfDryness;
     uint32_t frequencyThresholdTooDry;
     uint32_t frequencyThresholdTooWet;
+    bool isActive;
 
-    Sensor () {}; // null constructor: should NOT be used but for tests!
-    Sensor (int, uint32_t, uint32_t); // id, frequencyThresholdTooDry, frequencyThresholdTooWet
+    Sensor () {}; // null constructor
+    Sensor (int, uint32_t, uint32_t, bool); // id, frequencyThresholdTooDry, frequencyThresholdTooWet, isActive
     void setGradeOfDrynessByFrequency(uint32_t);
     const char* getGradeOfDrynessLiterally();
     bool justChangedGradeOfDryness();
