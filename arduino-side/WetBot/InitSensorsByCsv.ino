@@ -21,20 +21,8 @@ Sensor initSensorsByCsv () {
     char c = p.read();
     if (c == ',' || c == '\n') {
 
-      /* * /
-      Serial.println();
-      Serial.print("Value for line: ");
-      Serial.print(lineCounter);
-      Serial.print(" part: ");
-      Serial.print(partsCounter);
-      Serial.print(" => value: ");
-      Serial.println(csvString);
-
-      Serial.print("to int: ");
-      /* */
       char *end;
       csvValue = strtol(csvString.c_str(), &end, 10);
-      //Serial.println(csvValue);
 
       if (partsCounter == 0) {
         id = (int)csvValue;
@@ -51,13 +39,14 @@ Sensor initSensorsByCsv () {
       if (c == ',') {
         partsCounter++;
       } else { // need to be linefoot
+
         Sensor sensor ((id - 1), (uint32_t)(frequencyThresholdTooWet), (uint32_t)(frequencyThresholdTooDry), isActive);
         SENSORs[lineCounter] = sensor;
         // initialize the pin of the sensor
         pinMode(SENSORs[lineCounter].sensorPinNumber, OUTPUT);
         // initialize the pin of the relay
         pinMode(SENSORs[lineCounter].relayPinNumber, OUTPUT);
-        printSensor(SENSORs[lineCounter]);
+
         lineCounter++;
         partsCounter = 0;
 
@@ -75,9 +64,6 @@ Sensor initSensorsByCsv () {
 
   csvString = "";
 
-  Serial.print("current free RAM: ");
-  Serial.println(getFreeRam());
-
   // power on the first active sensor
   if (SENSORs[0].isActive) {
     digitalWrite(SENSORs[0].sensorPinNumber, HIGH);
@@ -91,31 +77,3 @@ Sensor initSensorsByCsv () {
   }
 
 }
-
-/* */
-// for debugging purposes ... @TODO: remove me, if sketch is working!
-void printSensor(Sensor sensor) {
-  Serial.print("Sensor{id: ");
-  Serial.print(sensor.id);
-  Serial.print(", sensorPinNumber: ");
-  Serial.print(sensor.sensorPinNumber);
-  Serial.print(", relayPinNumber: ");
-  Serial.print(sensor.relayPinNumber);
-  Serial.print(", frequency: ");
-  Serial.print(sensor.frequency);
-  Serial.print(", gradeOfDryness: ");
-  Serial.print(sensor.gradeOfDryness);
-  Serial.print(" (");
-  Serial.print(sensor.getGradeOfDrynessLiterally());
-  Serial.print(")");
-  Serial.print(", previousGradeOfDryness: ");
-  Serial.print(sensor.previousGradeOfDryness);
-  Serial.print(", frequencyThresholdTooDry: ");
-  Serial.print(sensor.frequencyThresholdTooDry);
-  Serial.print(", frequencyThresholdTooWet: ");
-  Serial.print(sensor.frequencyThresholdTooWet);
-  Serial.print(", active: ");
-  Serial.print(sensor.isActive);
-  Serial.println("};");
-}
-/* */

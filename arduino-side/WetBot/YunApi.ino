@@ -46,22 +46,15 @@ void digitalCommand(YunClient client) {
   // with a value like: "/digital/13/1"
   if (client.read() == '/') {
     value = client.parseInt();
-    //Serial.print("digitalCommand: Write: pin: ");
-    //Serial.print(pin);
-    //Serial.print(" value: ");
-    //Serial.println(value);
     digitalWrite(pin, value);
     // Send feedback to client
     client.print(pin);
     client.print(" set to ");
     client.println(value);
   } else {
-    //Serial.print("digitalCommand: Read: pin: ");
-    //Serial.println(pin);
     value = digitalRead(pin);
     client.println(value);
   }
-
 
   // Update datastore key with the current pin value
   String key = "D";

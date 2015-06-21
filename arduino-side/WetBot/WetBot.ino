@@ -16,9 +16,10 @@ Sensors Input on Pin 12      / Arduino Yún
 Sensors VCC   on Pin A0 - A6 / Arduino Yún
 Valves VCC    on Pin 4 - 9   / Arduino Yún
  
-Der Sketch verwendet 25.112 Bytes (87%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 1.722 Bytes (67%) des dynamischen Speichers, 838 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 21.886 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 942 Bytes (36%) des dynamischen Speichers, 1.618 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
+
 
 
 Vielen Dank an die Arduino-Community und alle Freundinnen und Freunde des Open-Source-Gedankens.
@@ -50,7 +51,7 @@ Copy me, I want to travel...
 #include "YunApi.h"
 
 // variable for saving sensor data
-char currentComment[7] = "";
+char currentComment[14] = "";
 
 Sensor SENSORs[6]; // keep this variable in sync with the one in Sensors.h
 Sensor activeSensor;
@@ -68,41 +69,23 @@ void setup() {
   Serial.begin(9600);	// Initialize the Serial
   pinMode(13, OUTPUT); // initialize the LED pin as an output
 
-  // waiting for serial just for debugging purposes
-  while (!Serial) {
-    // wait for serial port to connect.
-    digitalWrite(13, HIGH);
-  }
-  digitalWrite(13, LOW); // Serial now is available, switching off the led
-
-  Serial.println("***            WetBot              *** ");
-  Serial.println("***       by count0/tq 6/2015      *** ");
-  Serial.println("*** 25.112 Bytes (87%) from 28.672 *** ");
-  Serial.println("");
+  digitalWrite(13, HIGH);
+  delay(100);
+  digitalWrite(13, LOW);
 
   // setup Brigde for InitSensorsByCSV, SaveSensorData and YùnTimeSync
   Bridge.begin();
 
   delay(200);
 
-  Serial.print("will initialize the time sync");
   initAndSyncTime();
-  Serial.println(" .... DONE!");
 
-  Serial.print("will initialize the saving of sensor data");
   initSaveSensorData();
-  Serial.println(" .... DONE!");
 
-  Serial.println("will initialize the SENSORs");
   activeSensor = initSensorsByCsv();
-  Serial.println(" .... DONE!");
 
-  Serial.print("will initialize the YunAPI");
   initYunServer();
-  Serial.println(" .... DONE!");  
 
-  Serial.print("Measuring starts for first sensor with id: ");
-  Serial.println(activeSensor.id);
   FreqCount.begin(1000);
 
   delay(1000);
@@ -118,21 +101,10 @@ void loop() {
 
     previousMillis = currentMillis;   
 
-    Serial.print("current free RAM (1): ");
-    Serial.println(getFreeRam());
-
     if (FreqCount.available()) {
   
       activeSensor.setGradeOfDrynessByFrequency(FreqCount.read());
-  
-      Serial.print("Sensor: ");
-      Serial.print(activeSensor.id);
-      Serial.print(" -> frequency: ");
-      Serial.print(activeSensor.frequency);
-      Serial.print(" Hz => gradeOfDryness: ");
-      Serial.print(activeSensor.gradeOfDryness);
-      Serial.print(" @ ");
-      Serial.println(digitalClockDisplay());
+
     }
   
     // case of ERROR!:
@@ -142,21 +114,13 @@ void loop() {
       digitalWrite(activeSensor.relayPinNumber, LOW);
       strcpy(currentComment, "error");
   
-      Serial.println("Error: no signal.");
-  
     } else {
   
       if (activeSensor.justChangedGradeOfDryness()) {
         if (activeSensor.gradeOfDryness >= 3) { // it gets too dry
-          Serial.println();
-          Serial.print("Change: Start watering for sensor.id: ");
-          Serial.println(activeSensor.id);
           digitalWrite(activeSensor.relayPinNumber, HIGH);
           strcpy(currentComment, "change2tooDry");
         } else if (activeSensor.gradeOfDryness <= 1 ) { // it gets too wet
-          Serial.println();
-          Serial.print("Change Stop watering for sensor.id: ");
-          Serial.println(activeSensor.id);
           digitalWrite(activeSensor.relayPinNumber, LOW);
           strcpy(currentComment, "change");
         }
@@ -173,9 +137,6 @@ void loop() {
     activeSensor = getNextSensor(activeSensor);
 
     delay(200);
-
-    Serial.print("current free RAM (2): ");
-    Serial.println(getFreeRam());
   }
 
   listenApiRequests();
@@ -183,9 +144,3 @@ void loop() {
   delay(1000);
 
 } // end void loop
-
-int getFreeRam () {
-  extern int __heap_start, *__brkval;
-  int v;
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-}

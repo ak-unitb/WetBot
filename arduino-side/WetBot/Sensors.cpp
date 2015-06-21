@@ -60,7 +60,7 @@ Sensor getNextSensor(Sensor sensor) {
   }
 
   if (!nextSensor.isActive) { // @TODO: if no active sensor is configured this is an endless recursion!!!!
-    Serial.println("nextSensor isn't active, choose next one!");
+    //Serial.println("nextSensor isn't active, choose next one!");
     nextSensor = getNextSensor(nextSensor);
   }
 
