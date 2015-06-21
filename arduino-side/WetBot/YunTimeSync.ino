@@ -8,9 +8,7 @@ bool timeSyncIsInitialized = false;
 
 // main initialization function
 void initAndSyncTime() {
-  
-  Bridge.begin();  // Initialize the Bridge (implemtation just step out, if Bridge is already started)  
-  
+
   if (!timeSyncIsInitialized) {
     setSyncProvider( requestTimeSyncFromYunSide );  //set function to call when sync required
     
@@ -43,6 +41,9 @@ time_t requestTimeSyncFromYunSide() {
     }
     i += 1;
   }
+
+  p.flush();
+  p.close();
 
   char *junk;
   pctime = strtol(pctimeCharBuf, &junk, 10);
