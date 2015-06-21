@@ -1,20 +1,28 @@
 <?php
-    require_once('../incs/db.php');
+	require_once('../incs/db.php');
+	
+	if (!empty($_GET['reset-mcu']) && $_GET['reset-mcu'] == 'true') {
+		$res = shell_exec('/usr/bin/reset-mcu');
+		echo '<pre><code>';
+		var_dump($res);
+		echo '</code></pre>';
+	}
+	
 ?>
 <?php include "../incs/html_head.php" ?>
 
-        <h1>Sensoren</h1>
+		<h1>Sensoren</h1>
 
 <?php
-    if ($conn) {
+	if ($conn) {
 
-        $sql = 'SELECT * FROM `sensors` WHERE `active` = TRUE ORDER BY `id`;';
+		$sql = 'SELECT * FROM `sensors` WHERE `active` = TRUE ORDER BY `id`;';
 
-        $rs = $conn->query($sql);
+		$rs = $conn->query($sql);
 
-        if ($rs === false) {
-            trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
-        } else {
+		if ($rs === false) {
+			trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+		} else {
 			if ($rs->num_rows <= 0) {
 ?>
 		<p class="text-message bg-warning">Keine aktiven Sensoren<p>
@@ -22,10 +30,10 @@
 			} else {
 ?>
 		<div class="panel">
-        	<div class="table-responsive">
-	            <div class="panel-heading">
-	                <h2 class="panel-title">Aktive Sensoren</h2>
-	            </div>
+			<div class="table-responsive">
+				<div class="panel-heading">
+					<h2 class="panel-title">Aktive Sensoren</h2>
+				</div>
 				<table class="table table-striped table-hover rwd-table">
 					<thead>
 						<th>ID</th>
@@ -40,8 +48,8 @@
 					</thead>
 					<tbody>
 <?php
-	            $rs->data_seek(0);
-	            while ($row = $rs->fetch_assoc()) {
+				$rs->data_seek(0);
+				while ($row = $rs->fetch_assoc()) {
 ?>
 						<tr>
 							<td data-th="ID"><?php echo $row['id'] ?></td>
@@ -55,25 +63,25 @@
 							<td data-th="Aktion"><a href="edit.php?id=<?php echo $row['id'] ?>">Bearbeiten</a></td>
 						</tr>
 <?php
-	            }
+				}
 ?>
 					</tbody>
 				</table>
 			</div>
-        </div>
+		</div>
 <?php
 			}
-        }
+		}
 ?>
 		<p>&nbsp;</p>
 <?php
-        $sql = 'SELECT * FROM `sensors` WHERE `active` = FALSE ORDER BY `id`;';
+		$sql = 'SELECT * FROM `sensors` WHERE `active` = FALSE ORDER BY `id`;';
 
-        $rs = $conn->query($sql);
+		$rs = $conn->query($sql);
 
-        if ($rs === false) {
-            trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
-        } else {
+		if ($rs === false) {
+			trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR);
+		} else {
 			$rs->data_seek(0);
 			if ($rs->num_rows <= 0) {
 ?>
@@ -82,10 +90,10 @@
 			} else {
 ?>
 		<div class="panel">
-        	<div class="table-responsive">
-	            <div class="panel-heading">
-	                <h2 class="panel-title">Inaktive Sensoren</h2>
-	            </div>
+			<div class="table-responsive">
+				<div class="panel-heading">
+					<h2 class="panel-title">Inaktive Sensoren</h2>
+				</div>
 				<table class="table table-striped table-hover rwd-table">
 					<thead>
 						<th>ID</th>
@@ -100,8 +108,8 @@
 					</thead>
 					<tbody>
 <?php
-	            $rs->data_seek(0);
-	            while ($row = $rs->fetch_assoc()) {
+				$rs->data_seek(0);
+				while ($row = $rs->fetch_assoc()) {
 ?>
 						<tr>
 							<td data-th="ID"><?php echo $row['id'] ?></td>
@@ -115,19 +123,19 @@
 							<td data-th="Aktion"><a href="edit.php?id=<?php echo $row['id'] ?>">Bearbeiten</a></td>
 						</tr>
 <?php
-	            }
+				}
 ?>
 					</tbody>
 				</table>
 			</div>
-        </div>
+		</div>
 <?php
 			}
 		}
-    } else {
+	} else {
 ?>
-        <p class="text-message bg-danger">Datenbank-Verbindung ist fehlgeschlagen.</p>
+		<p class="text-message bg-danger">Datenbank-Verbindung ist fehlgeschlagen.</p>
 <?php
-    }
+	}
 ?>
 <?php include "../incs/html_foot.php" ?>
