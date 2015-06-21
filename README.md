@@ -1,5 +1,5 @@
 # YunFreq
-measure the frequency of one up to six capacitive humidity sensor and make decisions for watering (ArduinoYùn)
+measure the frequency of one up to six capacitive humidity sensors and make decisions for watering (ArduinoYùn)
 
 ## Requirements
 - Arduino Yùn
