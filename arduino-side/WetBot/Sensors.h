@@ -22,8 +22,6 @@ class Sensor {
     bool justChangedGradeOfDryness();
 };
 
-Sensor initSensors();
-
 Sensor getNextSensor(Sensor sensor);
 
 extern Sensor SENSORs[6];

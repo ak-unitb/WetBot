@@ -43,26 +43,7 @@ const char* Sensor::getGradeOfDrynessLiterally() {
 bool Sensor::justChangedGradeOfDryness() {
   return previousGradeOfDryness != gradeOfDryness;
 }
-/*
-Sensor initSensors() {
-  for (int i = 0; i < 2; i++) {
-    // initialize the sensor struct
 
-    Sensor sensor (i, (uint32_t)(29629), (uint32_t)(17000), true);
-
-    SENSORs[i] = sensor;
-
-    // initialize the pin of the sensor
-    pinMode(SENSORs[i].sensorPinNumber, OUTPUT);
-    // initialize the pin of the relay
-    pinMode(SENSORs[i].relayPinNumber, OUTPUT);
-  }
-
-  // power on the first sensor
-  digitalWrite(SENSORs[0].sensorPinNumber, HIGH);
-  return SENSORs[0];
-}
-*/
 Sensor getNextSensor(Sensor sensor) {
 
   // power off the current sensor
@@ -77,8 +58,9 @@ Sensor getNextSensor(Sensor sensor) {
   } else {
     nextSensor =  SENSORs[(1 + sensor.id)];
   }
-  
+
   if (!nextSensor.isActive) { // @TODO: if no active sensor is configured this is an endless recursion!!!!
+    Serial.println("nextSensor isn't active, choose next one!");
     nextSensor = getNextSensor(nextSensor);
   }
 
