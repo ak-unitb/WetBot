@@ -87,7 +87,7 @@
                                 while ($rowSensors = $rsSensors->fetch_assoc()) {
                                 $mapSensorIdName[$rowSensors['id']] = $rowSensors['name'];
 ?>
-                                                                                <option value="<?php echo $rowSensors['id'] ?>" <?php echo $currentSensorId == $ro
+										<option value="<?php echo $rowSensors['id'] ?>" <?php echo $currentSensorId == $rowSensors['id'] ? 'selected="selected"' : '' ?>><?php echo $rowSensors['name'] ?></option>
 <?php
                                 }
                         }

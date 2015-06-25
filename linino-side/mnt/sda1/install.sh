@@ -94,6 +94,13 @@ echo "mysql.trace_mode = Off" >> /etc/php.ini
 # restarting uhhtpd to make sure, no cached anything is present anymore
 /etc/init.d/uhttpd restart
 
+### get the current source for linino into a tmp dir
+if [[ ! -d /mnt/sda1/.install-wetbot ]]; then
+
+	mkdir /mnt/sda1/.install-wetbot;
+	
+fi
+
 
 echo "Done!";
 echo;
