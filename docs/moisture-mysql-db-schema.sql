@@ -54,6 +54,8 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci
 COMMENT = 'The table for analytics and statistics of the measured datas' /* comment truncated */ /*.*/;
 
+CREATE INDEX idx_sensors_datas_created_at ON sensor_datas (created_at DESC);
+CREATE INDEX idx_sensors_datas_created_at_by_sensor ON sensor_datas (created_at DESC, sensor_id);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

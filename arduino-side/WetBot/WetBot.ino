@@ -16,8 +16,8 @@ Sensors Input on Pin 12      / Arduino Yún
 Sensors VCC   on Pin A0 - A6 / Arduino Yún
 Valves VCC    on Pin 4 - 9   / Arduino Yún
  
-Der Sketch verwendet 21.886 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
-Globale Variablen verwenden 942 Bytes (36%) des dynamischen Speichers, 1.618 Bytes für lokale Variablen verbleiben.
+Der Sketch verwendet 21.906 Bytes (76%) des Programmspeicherplatzes. Das Maximum sind 28.672 Bytes.
+Globale Variablen verwenden 956 Bytes (37%) des dynamischen Speichers, 1.604 Bytes für lokale Variablen verbleiben.
 Das Maximum sind 2.560 Bytes.
 
 
@@ -122,6 +122,8 @@ void loop() {
           strcpy(currentComment, "change2tooDry");
         } else if (activeSensor.gradeOfDryness <= 1 ) { // it gets too wet
           digitalWrite(activeSensor.relayPinNumber, LOW);
+          strcpy(currentComment, "change2TooWet");
+        } else {
           strcpy(currentComment, "change");
         }
       }
