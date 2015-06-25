@@ -28,7 +28,7 @@ opkg update
 opkg install zoneinfo-core zoneinfo-europe
 
 opkg update
-opkg install php5 php5-cgi
+opkg install php5 php5-cgi php5-cli
 
 uci add_list uhttpd.main.interpreter=".php=/usr/bin/php-cgi"
 uci set uhttpd.main.index_page="index.html index.php"
@@ -89,10 +89,9 @@ echo "mysql.default_password = " >> /etc/php.ini
 echo "mysql.connect_timeout = 60" >> /etc/php.ini
 echo "mysql.trace_mode = Off" >> /etc/php.ini
 
-
-
+# restarting mysqld
 /etc/init.d/mysqld restart
-
+# restarting uhhtpd to make sure, no cached anything is present anymore
 /etc/init.d/uhttpd restart
 
 

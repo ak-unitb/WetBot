@@ -9046,8 +9046,18 @@ p.text-message {
 	display: block;
 	color: #222;
 	font-size: 3em;
-	margin: 70% 15%;
+	margin: 30% 15%;
 	white-space: nowrap;
+}
+
+@media screen and (max-width: 767px) {
+	.highcharts.sensor .highcharts__wait {
+		display: block;
+		color: #222;
+		font-size: 3em;
+		margin: 70% 15%;
+		white-space: nowrap;
+	}
 }
 
 .glyphicon-refresh-animate {

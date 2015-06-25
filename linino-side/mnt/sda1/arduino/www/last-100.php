@@ -75,13 +75,23 @@
 								<td data-th="Kommentar"><input type="text" class="form-control" name="comment" placeholder="" value="<?php echo !empty($_GET['comment']) ? $_GET['comment'] : ''; ?>" disabled></td>
 								<td data-th="Sensor-ID">
 									<select class="form-control" name="sensor_id" disabled>
-										<option value="">-</option>
-										<option value="1" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 1 ? 'selected' : ''; ?>>1</option>
-										<option value="2" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 2 ? 'selected' : ''; ?>>2</option>
-										<option value="3" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 3 ? 'selected' : ''; ?>>3</option>
-										<option value="4" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 4 ? 'selected' : ''; ?>>4</option>
-										<option value="5" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 5 ? 'selected' : ''; ?>>5</option>
-										<option value="6" <?php echo !empty($_GET['sensor_id']) && $_GET['sensor_id'] == 6 ? 'selected' : ''; ?>>6</option>
+										<option value="">Alle Sensoren</option>
+<?php
+			$sqlSensors = 'SELECT *  FROM `sensors` WHERE `active` = TRUE;';
+			$rsSensors = $conn->query($sqlSensors);
+
+			if ($rsSensors === false) {
+				trigger_error('Wrong SQL: ' . $sqlSensors . ' Error: ' . $conn->error, E_USER_ERROR);
+			} else {
+				$currentSensorId = $_GET['sensor_id'];
+				$rsSensors->data_seek(0);
+				while ($rowSensors = $rsSensors->fetch_assoc()) {
+?>
+										<option value="<?php echo $rowSensors['id'] ?>" <?php echo $currentSensorId == $rowSensors['id'] ? 'selected' : ''; ?>><?php echo $rowSensors['name'] ?></option>
+<?php
+				}
+			}
+?>
 									</select>
 								</td>
 								<td data-th="Aktion"><button type="submit" class="btn btn-primary pull-right">Filter anwenden</button></td>

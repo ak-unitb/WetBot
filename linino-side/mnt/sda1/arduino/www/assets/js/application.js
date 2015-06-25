@@ -13979,7 +13979,7 @@ var drawChartForSensor = function ($container, sensorTitle, fromToDateTime, thre
 				text: 'Frequenz (Hz)'
 			},
 			min: 0,
-			max: 40000,
+			max: 50000,
 			minorGridLineWidth: 0,
 			gridLineWidth: 0,
 			alternateGridColor: null,
@@ -13989,7 +13989,7 @@ var drawChartForSensor = function ($container, sensorTitle, fromToDateTime, thre
 				to: thresholdTooWet,
 				color: 'rgba(0, 255, 255, 0.5)', // 'rgba(68, 170, 213, 0.5)',
 				label: {
-					text: 'zu nass',
+					text: 'zu nass (bis ' + thresholdTooWet + ' Hz)',
 					style: {
 						color: '#606060'
 					},
@@ -14010,10 +14010,10 @@ var drawChartForSensor = function ($container, sensorTitle, fromToDateTime, thre
 				}
 			}, { // tooDry
 				from: thresholdTooDry,
-				to: 40000,
+				to: 50000,
 				color: 'rgba(255, 0, 0, 0.5)', //'rgba(68, 170, 213, 0.1)',
 				label: {
-					text: 'trocken',
+					text: 'trocken (ab ' + thresholdTooDry + ' Hz)',
 					style: {
 						color: '#606060'
 					},
@@ -14092,7 +14092,7 @@ $(function () {
 			}
 		);
 	};
-	var relaiPinButtonClickhandler = function ($this, dataUrl) {
+	var relayPinButtonClickhandler = function ($this, dataUrl) {
 		$this.on(
 			'click',
 			function (evnt) {
@@ -14130,7 +14130,7 @@ $(function () {
 				dataUrl = $this.data('url');
 			//console.log('anchor: ', this, ' dataUrl: ', dataUrl);
 			synchronizeRelaisPinBtn($this, dataUrl);
-			relaiPinButtonClickhandler($this, dataUrl);
+			relayPinButtonClickhandler($this, dataUrl);
 			
 			window.setInterval(function () { synchronizeRelaisPinBtn($this, dataUrl); }, 600000);
 		}
