@@ -23,7 +23,7 @@
                 if (!empty($whereClause)) {
                         $sql .= " WHERE " . implode(' AND ', $whereClause) . "";
                 }
-                $countLastEnrties = 720;
+                $countLastEnrties = 360;
                 $sql .= " ORDER BY `created_at` DESC LIMIT " . $countLastEnrties;
 
                 $rs = $conn->query($sql);

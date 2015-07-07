@@ -8800,7 +8800,9 @@ section {
   border-radius: 80px;
 }
 
-
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness- {
+  background-color: lightgrey;
+}
 .sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-0 {
   background-color: white;
 }
@@ -8827,6 +8829,9 @@ section {
   padding: 0;
   width: 60%;
 }
+.sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness- .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness-- {
+  display: block;
+}
 .sensor-data .sensor-data__status.sensor-data__status--grade-of-dryness-0 .sensor-data__status__grade-of-dryness.sensor-data__status__grade-of-dryness--0 {
   display: block;
 }
@@ -8843,7 +8848,7 @@ section {
   display: block;
 }
 .sensor-data .sensor-data__status .sensor-data__status__frequency {
-  color: white;
+  color: #ada9a9;
   display: block;
   float: left;
   height: auto;
@@ -8852,7 +8857,7 @@ section {
   width: 60%;
 }
 .sensor-data .sensor-data__status .sensor-data__status__comment {
-  color: white;
+  color: #ada9a9;
   display: block;
   float: left;
   height: auto;
@@ -8886,18 +8891,21 @@ section {
   to { opacity: 0; }
 }
 .sensor-data .sensor-data__watering-button .glyphicon {
-  visibility: hidden;
+  display: none;
 }
-.sensor-data .sensor-data__watering-button.off .glyphicon {
+.sensor-data .sensor-data__watering-button.off .glyphicon.glyphicon-tint {
   color: red;
-  visibility: visible;
+  display: inline-block;
 }
-.sensor-data .sensor-data__watering-button.on .glyphicon {
+.sensor-data .sensor-data__watering-button.on .glyphicon.glyphicon-tint {
   animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate;
   color: green;
-  visibility: visible;
+  display: inline-block;
 }
-
+.sensor-data .sensor-data__watering-button.error .glyphicon.glyphicon-exclamation-sign {
+  color: yellow;
+  display: inline-block;
+}
 
 p.text-message {
   padding: 1em;

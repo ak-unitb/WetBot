@@ -35,14 +35,14 @@
 ?>
 		<div class="sensor-data" data-id="<?php echo $rowSensors['id'] ?>" data-pin-number="<?php echo $rowSensors['pin_number'] ?>">
 			<ul class="list-inline pull-right">
-				<li><a href="#" class="sensor-data__watering-button xhr-call" data-url="/arduino/digital/<?php echo $rowSensors['relay_pin_number'] ?>" title=""><span class="glyphicon glyphicon-tint"></span></a></li>
+				<li><a href="#" class="sensor-data__watering-button xhr-call error" data-url="/arduino/digital/<?php echo $rowSensors['relay_pin_number'] ?>" title=""><span class="glyphicon glyphicon-tint"></span><span class="glyphicon glyphicon-exclamation-sign"></span></a></li>
 			</ul>
 			<h2 class="sensor-data__name"><?php echo $rowSensors['name'] ?></h2>
 			<p class="sensor-data__location-description">
 				<?php echo $rowSensors['location_description'] ?>
 			</p>
 			<div
-				class="sensor-data__status sensor-data__status--grade-of-dryness-<?php echo $rowSensorDatas['grade_of_dryness'] ?> clearfix"
+				class="sensor-data__status sensor-data__status--grade-of-dryness-<?php echo empty($rowSensorDatas['comment']) || $rowSensorDatas['comment'] != 'error' ? $rowSensorDatas['grade_of_dryness'] : '' ?> clearfix"
 				data-grade-of-dryness="Trockenheitsgrad: <?php echo $rowSensorDatas['grade_of_dryness'] ?>"
 				data-title="Created @ <?php echo $rowSensorDatas['created_at'] ?>">
 <?php
@@ -66,6 +66,7 @@
 <?php
 				   }
 ?>
+				<span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--">Messfehler!</span>
 				<span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--0">klatschnass</span>
 				<span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--1">nass</span>
 				<span class="sensor-data__status__grade-of-dryness sensor-data__status__grade-of-dryness--2">feucht</span>
@@ -90,4 +91,5 @@
 <?php
 	}
 ?>
+
 <?php include "incs/html_foot.php" ?>

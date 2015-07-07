@@ -14065,19 +14065,29 @@ $(function () {
 
 		$.getJSON('/sd/sensors/statistic.json.php?sensor_id=' + $container.data('sensor-id') + "&" + (new Date()).getTime(), function (json) {
 			json.data.reverse();
-			drawChartForSensor($container, json.sensor_name, json.fromToDatetime[0].date + " bis " + json.fromToDatetime[1].date, json.thresholdTooWet, json.thresholdTooDry, json.data);
+			try {
+				drawChartForSensor($container, json.sensor_name, json.fromToDatetime[0].date + " bis " + json.fromToDatetime[1].date, json.thresholdTooWet, json.thresholdTooDry, json.data);
+			} catch (ex) {
+				console.dir(ex);
+			}
 		});
 	}
 
 });
+
 // pin status 
 $(function () {
 	var synchronizeRelaisPinBtn = function ($this, dataUrl) {
 		$.get(
 			dataUrl + '?' + (new Date()).getTime(),
+			function () {
+				//console.log('success')
+			}
+		).done(
 			function (xhrData, xhrStatus, $xhr) {
+				//console.dir(arguments);
+				$this.removeClass('on off error');
 				if (xhrStatus == "success") {
-					$this.removeClass('on').removeClass('off');
 					xhrData = xhrData.substring(0,1);
 					if (xhrData == "0") {
 						//console.log(dataUrl, "switching to off");
@@ -14089,6 +14099,14 @@ $(function () {
 						$this.attr('title', "Wasser halt?");
 					}
 				}
+			}
+		).fail(
+			function(xhrData, xhrStatus, $xhr) {
+				//alert("Fehler!");
+				//console.dir(arguments);
+				//console.log(dataUrl, "switching to ERROR");
+				$this.addClass('error');
+				$this.attr('title', "Fehler bei der Abfrage! Klick für erneuten Versuch.");
 			}
 		);
 	};
@@ -14109,11 +14127,15 @@ $(function () {
 					actionUrl = actionUrl + '0';
 					targetSuccessClass = 'off';
 					titleText = "Wasser marsch?";
+				} else { // .error
+					$this.removeClass("on off error");
+					synchronizeRelaisPinBtn($this, dataUrl);
+					return;
 				}
 				$.get(
 					actionUrl + "?" + (new Date()).getTime(),
 					function (data, xhrStatus, $xhr) {
-						$this.removeClass("on").removeClass("off");
+						$this.removeClass("on off error");
 						if (xhrStatus == "success") {
 							$this.addClass(targetSuccessClass);
 							$this.attr('title', titleText);
@@ -14122,7 +14144,7 @@ $(function () {
 				);
 			}
 		);
-	}
+	};
 	$('.xhr-call').each(
 
 		function () {
@@ -14136,4 +14158,3 @@ $(function () {
 		}
 	);
 });
-
