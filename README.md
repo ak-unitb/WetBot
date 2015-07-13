@@ -1,4 +1,4 @@
-# YunFreq
+# WetBot
 measure the frequency of one up to six capacitive humidity sensors and make decisions for watering (ArduinoYùn)
 
 ## Requirements
@@ -16,6 +16,6 @@ Here the sketch YunFreq.ino needs to be uploaded using the Arduino IDE. I recomm
 
 ## Usage
 At the current status the sample usage with a breadborad and LEDs can be seen here:
-![YunFreq with LEDs](YunFreq-with-LEDs.png)
+IMAGE!
 The LEDs are showing the grade of dryness for the last triggered sensor.
 
